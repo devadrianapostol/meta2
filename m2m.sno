@@ -1,0 +1,54 @@
+*
+* Translate Meta II machine code to C
+*
+
+
+	&trim = 1
+	&anchor = 1
+
+
+    	digits = "0123456789"
+	alpha = &ucase &lcase
+	alphanumeric = digits alpha
+	whitespace = " " char(9) char(8) char(13) nl
+	nl = char(10)
+	quotes = char(34)
+	string = "'" break("'") . str "'"
+	number = span(digits) arbno("." any(digits)) span(digits)
+	identifier = any(alpha) (span(alphanumeric) | empty)
+	count = 0
+	ws = span(whitespace)
+	opr = "TST" | "ID" | "NUM" | "SR" | "R" | "SET"
++	    | "BT" | "BF" | "BE" | "B" | "CL" | "CI" | "GN1"
++	    | "GN2" | "LB" | "OUT" | "ADR" | "NOP"
+
+
+start	output = "#include <meta2.h>"
+	output = "void run() {"
+
+
+loop	instr = input				:f(done)
+	instr ws "END" rpos(0)			:s(done)
+        instr ws "CLL" ws rem . lbl		:f(loop.0)
+	output = "CLL(" lbl ",_L" count ");"
+	count = count + 1			:(loop)
+loop.0	instr identifier . lbl rpos(0)		:f(loop.1)
+	output = lbl ":;"	  		:(loop)
+loop.1	instr ws opr . op rpos(0)		:f(loop.11)
+	output = op "();"			:(loop)
+loop.11 instr ws opr . op ws rem . opn  	:f(error)
+	opn string 	       	      		:f(loop.2)
+	output = op "(" quotes str quotes ");"	:(loop)
+loop.2	opn number . num rpos(0)		:f(loop.3)
+	output = op "(" num ");"		:(loop)
+loop.3	opn identifier . id rpos(0)		:f(error)
+	output = op "(" id ");"			:(loop)
+
+error	terminal = "BAD SYNTAX: " instr
+	&code = 1				:(end)
+
+
+done	output = "}"				
+
+end
+
