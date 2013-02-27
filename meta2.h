@@ -21,10 +21,23 @@ int buffer_size = 0;
 char *previous;
 int label;
 int column;
-int newline;
+int newline, force, trace, ci;
+int level;
 
 
 void run();
+
+
+static char *
+copy(char *str, int n)
+{
+  char *nstr = (char *)malloc(n + 1);
+
+  assert(nstr);
+  memcpy(nstr, str, n);
+  nstr[ n ] = '\0';
+  return nstr;
+}
 
 
 static void
@@ -37,6 +50,8 @@ emit(char *str)
 
   fputs(str, stdout);
   newline = *str != '\0' && str[ strlen(str) - 1 ] == '\n';
+
+  if(force) fflush(stdout);
 }
 
 
@@ -95,9 +110,9 @@ TST(char *str)
   size_t n = strlen(str);
   skipws();
   
-  if(!strncmp(str, position, n)) {
+  if(ci ? !strncasecmp(str, position, n) : !strncmp(str, position, n)) {
     free(previous);
-    previous = strdup(str);
+    previous = copy(str, n);
     position += n;
     flag = 1;
   }
@@ -108,7 +123,7 @@ TST(char *str)
 static void
 ID()
 {
-  size_t n = 0;
+  size_t n;
   char *pos;
 
   flag = 0;
@@ -117,12 +132,13 @@ ID()
 
   if(isalpha(*pos)) {
     flag = 1;
+    ++pos;
 
-    for(++n; pos < limit && (isalnum(*pos) || *pos == '_'); ++n)
+    for(n = 0; pos < limit && (isalnum(*pos) || *pos == '_'); ++n)
       ++pos;
 
     free(previous);
-    previous = strndup(position, n);
+    previous = copy(position, n + 1);
     position = pos;
   }
 }
@@ -136,16 +152,18 @@ SR()
 
   flag = 0;
   skipws();
-  pos = position;
 
-  if(*pos == '\'') {
-    for(++n; *pos != '\''; ++n) {
+  if(*position == '\'') {
+    pos = position + 1;
+
+    for(n = 0; *pos != '\''; ++n) {
       if(pos >= limit) return;
+      else ++pos;
     } 
 
     flag = 1;
     free(previous);
-    previous = strndup(position + 1, n);
+    previous = copy(position, n + 2);
     position = pos + 1;
   }
 }
@@ -161,15 +179,15 @@ NUM()
 
   if(isdigit(*position)) {
     flag = 1;
-    pos = position;
+    pos = position + 1;
 
-    for(++n; 
+    for(n = 0;
 	position < limit && (isdigit(*position) || 
 			     (*position == '.' && *(position - 1) != '.'));
 	++n);
 
     free(previous);
-    previous = strndup(pos, n);
+    previous = copy(pos, n);
     flag = 1;
     position = pos;
   }
@@ -177,24 +195,29 @@ NUM()
 
 
 static void
-CLL_0(void *ret)
+CLL_0(char *lbl, void *ret)
 {
-  assert(stack_index + 1 < STACK_SIZE);
+  if(trace) fprintf(stderr, "[%d: %s]\n", level, lbl);
+
+  ++level;
+  ++stack_index;
+  assert(stack_index < STACK_SIZE);
   rstack[ stack_index ] = ret;
   vstack[ stack_index * 2 ] = NULL;
   vstack[ stack_index * 2 + 1 ] = NULL;
-  ++stack_index;
 }
 
-#define CLL(to, from)          CLL_0(&&from); goto to; from:
+#define CLL(to, from)          CLL_0(#to, &&from); goto to; from:
 
 
 static void *
 R_0()
 {
-  assert(stack_index > 0);
+  if(stack_index < 0) exit(EXIT_SUCCESS);
+
   free(vstack[ stack_index * 2 ]);
   free(vstack[ stack_index * 2 + 1 ]);
+  --level;
   return rstack[ stack_index-- ];
 }
 
@@ -213,7 +236,7 @@ static void
 CL(char *str)
 {
   emit(str);
-  emit(" ");
+  //XXX  emit(" ");
 }
 
 
@@ -252,7 +275,7 @@ GN_0(int off)
 static void
 LB()
 {
-  if(newline) column = 8;
+  if(!newline) column = 0;
 }
 
 
@@ -260,22 +283,49 @@ static void
 OUT()
 {
   /*XXX respect current "column" setting? */
-  column = 0;
+  column = 8;
+  putchar('\n');
 }
 
 
 #define ADR(lbl)       goto lbl
 
 
+static void
+usage(int code)
+{
+  fprintf(stderr, "usage: meta2 [-h] [-f] [-t]\n");
+  exit(code);
+}
+
+
 int
 main(int argc, char *argv[])
 {
+  int i;
+
+  force = trace = ci = 0;
+
+  for(i = 1; i < argc; ++i) {
+    if(argv[ i ][ 0 ] == '-') {
+      switch(argv[ i ][ 1 ]) {
+      case 'f': force = 1; break;
+      case 't': trace = 1; break;
+      case 'c': ci = 1; break;
+      case 'h': usage(EXIT_SUCCESS);
+      default:
+	usage(EXIT_FAILURE);
+      }
+    }
+  }
+
+  level = 0;
   buffer = limit = NULL;
   previous = NULL;
   stack_index = -1;
   read_input();
   flag = newline = 0;
   label = 0;
-  column = 0;
+  column = 8;
   run();
 }
