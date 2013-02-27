@@ -1,0 +1,13 @@
+.syntax program
+
+label = .id .out(* ':;') .,
+
+instruction = 'CLL' .id .out('CLL(' * ',_L' *1 ');')
+	    / ('ID' / 'NUM' / 'SR' / 'CI' / 'CL' / 'GN1' / 'GN2' / 'OUT' / 'SET' / 'NOP' /
+	      'END')
+	    / 'ADR' .id .out('ADR(' * ');') .,
+
+program = .out('#include <meta2.h>') .out('void run() {') 
+	$(instruction / label) .out('}') .,
+
+.end

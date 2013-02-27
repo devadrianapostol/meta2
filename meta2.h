@@ -59,7 +59,7 @@ emit(char *str)
 static void
 fail(char *msg)
 {
-  fprintf(stderr, "Error: %s\n\n", msg);
+  fprintf(stderr, "Error: %s\n\n  \"%160s ...\"\n", msg, position);
   exit(EXIT_FAILURE);
 }
 
