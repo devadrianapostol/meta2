@@ -21,8 +21,9 @@ int buffer_size = 0;
 char *previous;
 int label;
 int column;
-int newline, force, trace, ci;
+int newline, force, trace, ci, dquotes;
 int level;
+char *prgname;
 
 
 void run();
@@ -153,10 +154,10 @@ SR()
   flag = 0;
   skipws();
 
-  if(*position == '\'') {
+  if(*position == '\'' || (dquotes && *position == '\"')) {
     pos = position + 1;
 
-    for(n = 0; *pos != '\''; ++n) {
+    for(n = 0; *pos != *position; ++n) {
       if(pos >= limit) return;
       else ++pos;
     } 
@@ -183,7 +184,7 @@ NUM()
 
     for(n = 0;
 	position < limit && (isdigit(*position) || 
-			     (*position == '.' && *(position - 1) != '.'));
+			     (strchr(".eE-+", *position) && *(position - 1) != *position));
 	++n);
 
     free(previous);
@@ -294,7 +295,7 @@ OUT()
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: meta2 [-h] [-f] [-t]\n");
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q]\n", prgname);
   exit(code);
 }
 
@@ -304,17 +305,23 @@ main(int argc, char *argv[])
 {
   int i;
 
-  force = trace = ci = 0;
+  force = trace = ci = dquotes = 0;
+  prgname = argv[ 0 ];
 
   for(i = 1; i < argc; ++i) {
     if(argv[ i ][ 0 ] == '-') {
-      switch(argv[ i ][ 1 ]) {
-      case 'f': force = 1; break;
-      case 't': trace = 1; break;
-      case 'c': ci = 1; break;
-      case 'h': usage(EXIT_SUCCESS);
-      default:
-	usage(EXIT_FAILURE);
+      int j;
+
+      for(j = 1; argv[ i ][ j ] != '\0'; ++j) {
+	switch(argv[ i ][ j ]) {
+	case 'f': force = 1; break;
+	case 't': trace = 1; break;
+	case 'c': ci = 1; break;
+	case 'h': usage(EXIT_SUCCESS);
+	case 'q': dquotes = 1; break;
+	default:
+	  usage(EXIT_FAILURE);
+	}
       }
     }
   }
