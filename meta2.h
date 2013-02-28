@@ -6,6 +6,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
+#include <setjmp.h>
 
 
 #define DEFAULT_BUFFER_SIZE    1000000
@@ -24,6 +25,7 @@ int column;
 int newline, force, trace, ci, dquotes;
 int level;
 char *prgname;
+jmp_buf finished;
 
 
 void run();
@@ -76,9 +78,12 @@ next()
 static void
 skipws()
 {
-  while(position < limit && isspace(next()));
-
-  --position;
+  while(position < limit) {
+    if(!isspace(next())) {
+      --position;
+      return;
+    }
+  }
 }
 
 
@@ -131,7 +136,7 @@ ID()
   skipws();
   pos = position;
 
-  if(isalpha(*pos)) {
+  if(isalpha(*pos) || *pos == '_') {
     flag = 1;
     ++pos;
 
@@ -165,6 +170,10 @@ SR()
     flag = 1;
     free(previous);
     previous = copy(position, n + 2);
+    
+    if(dquotes)
+      *previous = previous[ n + 1 ] = '\"';
+
     position = pos + 1;
   }
 }
@@ -177,6 +186,7 @@ NUM()
   char *pos;
 
   skipws();
+  flag = 0;
 
   if(isdigit(*position)) {
     flag = 1;
@@ -198,7 +208,7 @@ NUM()
 static void
 CLL_0(char *lbl, void *ret)
 {
-  if(trace) fprintf(stderr, "[%d: %s]\n", level, lbl);
+  if(trace) fprintf(stderr, "[%d: %s \"%.16s ...\"]\n", level, lbl, position);
 
   ++level;
   ++stack_index;
@@ -208,13 +218,13 @@ CLL_0(char *lbl, void *ret)
   vstack[ stack_index * 2 + 1 ] = NULL;
 }
 
-#define CLL(to, from)          CLL_0(#to, &&from); goto L_ ## to; from:
+#define CLL(to, from)          CLL_0(#to, &&from); goto ___ ## to; from:
 
 
 static void *
 R_0()
 {
-  if(stack_index < 0) exit(EXIT_SUCCESS);
+  if(stack_index < 0) longjmp(finished, 1);
 
   free(vstack[ stack_index * 2 ]);
   free(vstack[ stack_index * 2 + 1 ]);
@@ -230,7 +240,7 @@ static inline NOP() {}
 #define B(lbl)                 goto lbl
 #define BT(lbl)                if(flag) goto lbl
 #define BF(lbl)                if(!flag) goto lbl
-#define BE(lbl)                if(!flag) fail("syntax error")
+#define BE                     if(!flag) fail("syntax error"); NOP
 
 
 static void
@@ -334,5 +344,14 @@ main(int argc, char *argv[])
   flag = newline = 0;
   label = 0;
   column = 8;
-  run();
+
+  if(setjmp(finished)) {
+    skipws();
+
+    if(position < limit)
+      fail("unexpected input");
+  }
+  else run();
+  
+  return 0;
 }

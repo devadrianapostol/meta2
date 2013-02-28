@@ -47,8 +47,8 @@ case "$outfile" in
 	tempm2m=$(mktemp XXXXXXXX.m2m)
 	tempc=$(mktemp XXXXXXXX.c)
 	meta2 $options <"$infile" >$tempm2m
-	m2m2c <$tempm2m >$temp2c
+	m2m2c <$tempm2m >$tempc
 	rm -f $tempm2m
-	gcc $tempc -o "$outfile"
+	gcc -I. $tempc -o "$outfile"
 	rm -f $tempc;;
 esac

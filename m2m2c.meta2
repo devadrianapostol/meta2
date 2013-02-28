@@ -1,11 +1,15 @@
 .syntax program
 
-label = .id .out(* ':;') .,
+label = .id .out('___' * ':;') .,
 
-instruction = 'CLL' .id .out('CLL(' * ',_L' *1 ');')
-	    / ('ID' / 'NUM' / 'SR' / 'CI' / 'CL' / 'GN1' / 'GN2' / 'OUT' / 'SET' / 'NOP' /
-	      'END')
-	    / 'ADR' .id .out('ADR(' * ');') .,
+argument = (.number .out(*) / .string .out(*) / .id .out('___' *)) .,
+
+instruction = 'CLL' .id .out('CLL(' * ',___' *1 ');')
+	    / 'ADR' .id .out('ADR(___' * ');')
+	    / 'END'
+	    / ('ID' / 'NUM' / 'SR' / 'CI' / 'GN1' / 'GN2' / 'OUT' / 'SET' / 'NOP' / 'BE')
+	      .out(* '();')
+	    / ('CL' / 'BF' / 'BT' / 'B' / 'TST') .out(* '(') argument .out(');') .,
 
 program = .out('#include <meta2.h>') .out('void run() {') 
 	$(instruction / label) .out('}') .,
