@@ -1,31 +1,24 @@
-.PHONY: all clean tar bootstrap snapshot
+.PHONY: all clean tar bootstrap snapshot check
 
 
 CC = gcc
 CFLAGS = -I. -g
 META2 = bootstrap/meta2
-M2M2C = bootstrap/m2m2c
 
 
-all: meta2 m2m2c
+all: meta2
 
 clean:
 	rm -f meta2.c meta2
 
-%.m2m: %.meta2
-	$(META2) -c <$< >$@
-
-%.c: %.m2m
-	$(M2M2C) -q <$< >$@
-
-meta2: meta2.c meta2.c
+meta2: meta2.c meta2.h
 	$(CC) $(CFLAGS) $< -o $@
 
-m2m2c: m2m2c.c meta2.h
-	$(CC) $(CFLAGS) $< -o $@
+meta2.c: meta2.meta2
+	$(META2) -q <$< >$@
 
-snapshot: meta2.c m2m2c.c
-	cp $^ bootstrap
+snapshot: meta2.c
+	cp $< bootstrap
 
 tar:
 	archive=meta2-$$(date +%Y%m%d); \
@@ -33,12 +26,17 @@ tar:
 	mkdir -p $$archive; \
 	mkdir -p $$archive/bootstrap; \
 	cp bootstrap/meta2.c $$archive/bootstrap; \
-	cp bootstrap/m2m2c.c $$archive/bootstrap; \
 	cp meta2.h meta2c Makefile README $$archive; \
 	tar cfz $$archive.tgz $$archive; \
 	rm -fr $$archive
 
 bootstrap:
-	cp bootstrap/meta2.c bootstrap/m2m2c.c .
+	cp bootstrap/meta2.c .
 	$(MAKE) all
-	cp meta2 m2m2c bootstrap
+	cp meta2 bootstrap
+
+check: all
+	$(META2) -q <meta2.meta2 >meta2.c
+	$(MAKE) meta2
+	./meta2 -q <meta2.meta2 >meta2.2.c
+	diff -u meta2.c meta2.2.c

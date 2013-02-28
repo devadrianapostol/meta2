@@ -2,26 +2,27 @@
 OUT1
         TST '*1'
         BF L0
-        CL 'GN1'
+        CL 'GN1();'
         OUT
 L0
         BT L1
         TST '*2'
         BF L2
-        CL 'GN2'
+        CL 'GN2();'
         OUT
 L2
         BT L1
         TST '*'
         BF L3
-        CL 'CI'
+        CL 'CI();'
         OUT
 L3
         BT L1
         SR
         BF L4
-        CL 'CL '
+        CL 'CL('
         CI
+        CL ');'
         OUT
 L4
 L1
@@ -42,14 +43,14 @@ L5
         BT L7
         TST '.LABEL'
         BF L8
-        CL 'LB'
+        CL 'LB();'
         OUT
         CLL OUT1
         BE
 L8
 L7
         BF L9
-        CL 'OUT'
+        CL 'OUT();'
         OUT
 L9
 L10
@@ -57,33 +58,37 @@ L10
 EX3
         ID
         BF L11
-        CL 'CLL '
+        CL 'CLL('
         CI
+        CL ',___'
+        GN1
+        CL ');'
         OUT
 L11
         BT L12
         SR
         BF L13
-        CL 'TST '
+        CL 'TST('
         CI
+        CL ');'
         OUT
 L13
         BT L12
         TST '.ID'
         BF L14
-        CL 'ID'
+        CL 'ID();'
         OUT
 L14
         BT L12
         TST '.NUMBER'
         BF L15
-        CL 'NUM'
+        CL 'NUM();'
         OUT
 L15
         BT L12
         TST '.STRING'
         BF L16
-        CL 'SR'
+        CL 'SR();'
         OUT
 L16
         BT L12
@@ -106,12 +111,15 @@ L18
         LB
         GN1
         OUT
+        CL ':;'
+        OUT
         CLL EX3
         BE
-        CL 'BT '
+        CL 'BT('
         GN1
+        CL ');'
         OUT
-        CL 'SET'
+        CL 'SET();'
         OUT
 L19
 L12
@@ -119,8 +127,9 @@ L12
 EX2
         CLL EX3
         BF L20
-        CL 'BF '
+        CL 'BF('
         GN1
+        CL ');'
         OUT
 L20
         BT L21
@@ -132,7 +141,7 @@ L21
 L24
         CLL EX3
         BF L25
-        CL 'BE'
+        CL 'BE();'
         OUT
 L25
         BT L26
@@ -146,6 +155,8 @@ L26
         LB
         GN1
         OUT
+        CL ':;'
+        OUT
 L23
 L28
         R
@@ -155,8 +166,9 @@ EX1
 L30
         TST '/'
         BF L31
-        CL 'BT '
+        CL 'BT('
         GN1
+        CL ');'
         OUT
         CLL EX2
         BE
@@ -168,6 +180,8 @@ L32
         LB
         GN1
         OUT
+        CL ':;'
+        OUT
 L29
 L33
         R
@@ -177,13 +191,15 @@ ST
         LB
         CI
         OUT
+        CL ':;'
+        OUT
         TST '='
         BE
         CLL EX1
         BE
         TST '.,'
         BE
-        CL 'R'
+        CL 'R();'
         OUT
 L34
 L35
@@ -193,8 +209,13 @@ PROGRAM
         BF L36
         ID
         BE
-        CL 'ADR '
+        CL '#include <meta2.h>'
+        OUT
+        CL 'void run() {'
+        OUT
+        CL 'ADR('
         CI
+        CL ');'
         OUT
 L37
         CLL ST
@@ -203,7 +224,7 @@ L37
         BE
         TST '.END'
         BE
-        CL 'END'
+        CL '}'
         OUT
 L36
 L38

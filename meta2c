@@ -36,19 +36,12 @@ done
 test -n "$infile" || usage
 
 case "$outfile" in
-    *.m2m) 
-	meta2 $options <$infile >$outfile;;
     *.c)
-	tempm2m=$(mktemp XXXXXXXX.m2m)
-	meta2 $options <"$infile" >$tempm2m
-	m2m2c <$tempm2m >"$outfile"
-	rm -f $tempm2m;;
-    *) 
-	tempm2m=$(mktemp XXXXXXXX.m2m)
 	tempc=$(mktemp XXXXXXXX.c)
-	meta2 $options <"$infile" >$tempm2m
-	m2m2c <$tempm2m >$tempc
-	rm -f $tempm2m
+	meta2 $options <"$infile" >$tempc
+    *) 
+	tempc=$(mktemp XXXXXXXX.c)
+	meta2 $options <"$infile" >$tempc
 	gcc -I. $tempc -o "$outfile"
 	rm -f $tempc;;
 esac
