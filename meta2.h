@@ -241,7 +241,7 @@ CLL_0(char *lbl, void *ret)
   vstack[ stack_index * 2 + 1 ] = NULL;
 }
 
-#define CLL(to, from)          CLL_0(#to, &&from); goto ___ ## to; from:
+#define CLL(to, from)          CLL_0(#to, &&from); goto to; from:
 
 
 static void *

@@ -1,213 +1,280 @@
-#include <meta2.h>
-void run() {
-ADR(___PROGRAM);
-___OUT1:;
-TST("*1");
-BF(___L1);
-CL("GN1");
-OUT();
-___L1:;
-BT(___L2);
-TST("*2");
-BF(___L3);
-CL("GN2");
-OUT();
-___L3:;
-BT(___L2);
-TST("*");
-BF(___L4);
-CL("CI");
-OUT();
-___L4:;
-BT(___L2);
-SR();
-BF(___L5);
-CL("CL ");
-CI();
-OUT();
-___L5:;
-___L2:;
-R();
-___OUTPUT:;
-TST(".OUT");
-BF(___L6);
-TST("(");
-BE();
-___L7:;
-CLL(OUT1,___0);
-BT(___L7);
-SET();
-BE();
-TST(")");
-BE();
-___L6:;
-BT(___L8);
-TST(".LABEL");
-BF(___L9);
-CL("LB");
-OUT();
-CLL(OUT1,___1);
-BE();
-___L9:;
-___L8:;
-BF(___L10);
-CL("OUT");
-OUT();
-___L10:;
-___L11:;
-R();
-___EX3:;
-ID();
-BF(___L12);
-CL("CLL ");
-CI();
-OUT();
-___L12:;
-BT(___L13);
-SR();
-BF(___L14);
-CL("TST ");
-CI();
-OUT();
-___L14:;
-BT(___L13);
-TST(".ID");
-BF(___L15);
-CL("ID");
-OUT();
-___L15:;
-BT(___L13);
-TST(".NUMBER");
-BF(___L16);
-CL("NUM");
-OUT();
-___L16:;
-BT(___L13);
-TST(".STRING");
-BF(___L17);
-CL("SR");
-OUT();
-___L17:;
-BT(___L13);
-TST("(");
-BF(___L18);
-CLL(EX1,___2);
-BE();
-TST(")");
-BE();
-___L18:;
-BT(___L13);
-TST(".EMPTY");
-BF(___L19);
-CL("SET");
-OUT();
-___L19:;
-BT(___L13);
-TST("$");
-BF(___L20);
-LB();
-GN1();
-OUT();
-CLL(EX3,___3);
-BE();
-CL("BT ");
-GN1();
-OUT();
-CL("SET");
-OUT();
-___L20:;
-___L13:;
-R();
-___EX2:;
-CLL(EX3,___4);
-BF(___L21);
-CL("BF ");
-GN1();
-OUT();
-___L21:;
-BT(___L22);
-CLL(OUTPUT,___5);
-BF(___L23);
-___L23:;
-___L22:;
-BF(___L24);
-___L25:;
-CLL(EX3,___6);
-BF(___L26);
-CL("BE");
-OUT();
-___L26:;
-BT(___L27);
-CLL(OUTPUT,___7);
-BF(___L28);
-___L28:;
-___L27:;
-BT(___L25);
-SET();
-BE();
-LB();
-GN1();
-OUT();
-___L24:;
-___L29:;
-R();
-___EX1:;
-CLL(EX2,___8);
-BF(___L30);
-___L31:;
-TST("/");
-BF(___L32);
-CL("BT ");
-GN1();
-OUT();
-CLL(EX2,___9);
-BE();
-___L32:;
-___L33:;
-BT(___L31);
-SET();
-BE();
-LB();
-GN1();
-OUT();
-___L30:;
-___L34:;
-R();
-___ST:;
-ID();
-BF(___L35);
-LB();
-CI();
-OUT();
-TST("=");
-BE();
-CLL(EX1,___10);
-BE();
-TST(".,");
-BE();
-CL("R");
-OUT();
-___L35:;
-___L36:;
-R();
-___PROGRAM:;
-TST(".SYNTAX");
-BF(___L37);
-ID();
-BE();
-CL("ADR ");
-CI();
-OUT();
-___L38:;
-CLL(ST,___11);
-BT(___L38);
-SET();
-BE();
-TST(".END");
-BE();
-CL("END");
-OUT();
-___L37:;
-___L39:;
-R();
-}
+        #include <meta2.h>
+        void run() {
+        ADR(PROGRAM);
+OUT1
+        :;
+        TST("*1");
+        BF(L0);
+        CL("GN1();");
+        OUT();
+L0
+        :;
+        BT(L1);
+        TST("*2");
+        BF(L2);
+        CL("GN2();");
+        OUT();
+L2
+        :;
+        BT(L1);
+        TST("*");
+        BF(L3);
+        CL("CI();");
+        OUT();
+L3
+        :;
+        BT(L1);
+        SR();
+        BF(L4);
+        CL("CL(");
+        CI();
+        CL(");");
+        OUT();
+L4
+        :;
+L1
+        :;
+        R();
+OUTPUT
+        :;
+        TST(".OUT");
+        BF(L5);
+        TST("(");
+        BE();
+L6
+        :;
+        CLL(OUT1,___L7);
+        BT(L6);
+        SET();
+        BE();
+        TST(")");
+        BE();
+L5
+        :;
+        BT(L8);
+        TST(".LABEL");
+        BF(L9);
+        CL("LB();");
+        OUT();
+        CLL(OUT1,___L10);
+        BE();
+L9
+        :;
+L8
+        :;
+        BF(L11);
+        CL("OUT();");
+        OUT();
+L11
+        :;
+L12
+        :;
+        R();
+EX3
+        :;
+        ID();
+        BF(L13);
+        CL("CLL(");
+        CI();
+        CL(",___");
+        GN1();
+        CL(");");
+        OUT();
+L13
+        :;
+        BT(L14);
+        SR();
+        BF(L15);
+        CL("TST(");
+        CI();
+        CL(");");
+        OUT();
+L15
+        :;
+        BT(L14);
+        TST(".ID");
+        BF(L16);
+        CL("ID();");
+        OUT();
+L16
+        :;
+        BT(L14);
+        TST(".NUMBER");
+        BF(L17);
+        CL("NUM();");
+        OUT();
+L17
+        :;
+        BT(L14);
+        TST(".STRING");
+        BF(L18);
+        CL("SR();");
+        OUT();
+L18
+        :;
+        BT(L14);
+        TST("(");
+        BF(L19);
+        CLL(EX1,___L20);
+        BE();
+        TST(")");
+        BE();
+L19
+        :;
+        BT(L14);
+        TST(".EMPTY");
+        BF(L21);
+        CL("SET");
+        OUT();
+L21
+        :;
+        BT(L14);
+        TST("$");
+        BF(L22);
+        LB();
+        GN1();
+        OUT();
+        CL(":;");
+        OUT();
+        CLL(EX3,___L23);
+        BE();
+        CL("BT(");
+        GN1();
+        CL(");");
+        OUT();
+        CL("SET();");
+        OUT();
+L22
+        :;
+L14
+        :;
+        R();
+EX2
+        :;
+        CLL(EX3,___L24);
+        BF(L25);
+        CL("BF(");
+        GN1();
+        CL(");");
+        OUT();
+L25
+        :;
+        BT(L26);
+        CLL(OUTPUT,___L27);
+        BF(L28);
+L28
+        :;
+L26
+        :;
+        BF(L29);
+L30
+        :;
+        CLL(EX3,___L31);
+        BF(L32);
+        CL("BE();");
+        OUT();
+L32
+        :;
+        BT(L33);
+        CLL(OUTPUT,___L34);
+        BF(L35);
+L35
+        :;
+L33
+        :;
+        BT(L30);
+        SET();
+        BE();
+        LB();
+        GN1();
+        OUT();
+        CL(":;");
+        OUT();
+L29
+        :;
+L36
+        :;
+        R();
+EX1
+        :;
+        CLL(EX2,___L37);
+        BF(L38);
+L39
+        :;
+        TST("/");
+        BF(L40);
+        CL("BT(");
+        GN1();
+        CL(");");
+        OUT();
+        CLL(EX2,___L41);
+        BE();
+L40
+        :;
+L42
+        :;
+        BT(L39);
+        SET();
+        BE();
+        LB();
+        GN1();
+        OUT();
+        CL(":;");
+        OUT();
+L38
+        :;
+L43
+        :;
+        R();
+ST
+        :;
+        ID();
+        BF(L44);
+        LB();
+        CI();
+        OUT();
+        CL(":;");
+        OUT();
+        TST("=");
+        BE();
+        CLL(EX1,___L45);
+        BE();
+        TST(".,");
+        BE();
+        CL("R();");
+        OUT();
+L44
+        :;
+L46
+        :;
+        R();
+PROGRAM
+        :;
+        TST(".SYNTAX");
+        BF(L47);
+        ID();
+        BE();
+        CL("#include <meta2.h>");
+        OUT();
+        CL("void run() {");
+        OUT();
+        CL("ADR(");
+        CI();
+        CL(");");
+        OUT();
+L48
+        :;
+        CLL(ST,___L49);
+        BT(L48);
+        SET();
+        BE();
+        TST(".END");
+        BE();
+        CL("}");
+        OUT();
+L47
+        :;
+L50
+        :;
+        R();
+        }

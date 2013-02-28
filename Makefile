@@ -41,4 +41,4 @@ tar:
 bootstrap:
 	cp bootstrap/meta2.c bootstrap/m2m2c.c .
 	$(MAKE) all
-	cp meta2 bootstrap
+	cp meta2 m2m2c bootstrap
