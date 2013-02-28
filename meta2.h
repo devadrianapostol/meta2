@@ -22,6 +22,7 @@ int buffer_size = 0;
 char *previous;
 int label;
 int column;
+int line_number;
 int newline, force, trace, ci, dquotes;
 int level;
 char *prgname;
@@ -61,7 +62,26 @@ emit(char *str)
 static void
 fail(char *msg)
 {
-  fprintf(stderr, "Error: %s\n\n  \"%.160s ...\"\n", msg, position);
+  char *pos;
+  int n;
+
+  fprintf(stderr, "Error: (line %d) %s\n\n  ", line_number, msg);
+
+  /* scan backwards */
+  for(pos = position; pos >= buffer && *pos != '\n'; --pos);
+
+  n = position - pos;
+  ++pos;
+
+  /* scan forward */
+  while(pos < limit && *pos != '\n')
+    fputc(*(pos++), stderr);
+
+  fputs("\n  ", stderr);
+
+  while(n--) fputc(' ', stderr);
+
+  fputs("^\n", stderr);
   exit(EXIT_FAILURE);
 }
 
@@ -79,10 +99,13 @@ static void
 skipws()
 {
   while(position < limit) {
-    if(!isspace(next())) {
+    char c = next();
+
+    if(!isspace(c)) {
       --position;
       return;
     }
+    else if(c == '\n') ++line_number;
   }
 }
 
@@ -336,6 +359,7 @@ main(int argc, char *argv[])
     }
   }
 
+  line_number = 1;
   level = 0;
   buffer = limit = NULL;
   previous = NULL;
