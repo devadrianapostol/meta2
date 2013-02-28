@@ -1,4 +1,4 @@
-.PHONY: all clean tar bootstrap snapshot check
+.PHONY: all clean dist bootstrap snapshot check
 
 
 CC = gcc
@@ -20,7 +20,7 @@ meta2.c: meta2.meta2
 snapshot: meta2.c
 	cp $< bootstrap
 
-tar:
+dist:
 	archive=meta2-$$(date +%Y%m%d); \
 	rm -fr $$archive; \
 	mkdir -p $$archive; \
