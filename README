@@ -1,0 +1,15 @@
+
+  Meta II
+  =======
+
+
+This is a simple implementation of "Meta II", the compiler-compiler 
+presented in [1].
+
+
+
+[1] http://www.ibm-1401.info/Meta-II-schorre.pdf
+
+[2] https://github.com/impeachgod/meta
+
+[3] https://github.com/robertfeldt/meta_compile
