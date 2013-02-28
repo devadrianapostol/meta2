@@ -30,10 +30,10 @@ start	output = "#include <meta2.h>"
 loop	instr = input				:f(done)
 	instr ws "END" rpos(0)			:s(done)
         instr ws "CLL" ws rem . lbl		:f(loop.0)
-	output = "CLL(" lbl ",_L" count ");"
+	output = "CLL(" lbl ",R_" count ");"
 	count = count + 1			:(loop)
 loop.0	instr identifier . lbl rpos(0)		:f(loop.1)
-	output = lbl ":;"	  		:(loop)
+	output = "L_" lbl ":;"	  		:(loop)
 loop.1	instr ws opr . op rpos(0)		:f(loop.11)
 	output = op "();"			:(loop)
 loop.11 instr ws opr . op ws rem . opn  	:f(error)
@@ -42,7 +42,7 @@ loop.11 instr ws opr . op ws rem . opn  	:f(error)
 loop.2	opn number . num rpos(0)		:f(loop.3)
 	output = op "(" num ");"		:(loop)
 loop.3	opn identifier . id rpos(0)		:f(error)
-	output = op "(" id ");"			:(loop)
+	output = op "(L_" id ");"		:(loop)
 
 error	terminal = "BAD SYNTAX: " instr
 	&code = 1				:(end)

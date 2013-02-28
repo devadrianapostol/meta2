@@ -59,7 +59,7 @@ emit(char *str)
 static void
 fail(char *msg)
 {
-  fprintf(stderr, "Error: %s\n\n  \"%160s ...\"\n", msg, position);
+  fprintf(stderr, "Error: %s\n\n  \"%.160s ...\"\n", msg, position);
   exit(EXIT_FAILURE);
 }
 
@@ -208,7 +208,7 @@ CLL_0(char *lbl, void *ret)
   vstack[ stack_index * 2 + 1 ] = NULL;
 }
 
-#define CLL(to, from)          CLL_0(#to, &&from); goto to; from:
+#define CLL(to, from)          CLL_0(#to, &&from); goto L_ ## to; from:
 
 
 static void *

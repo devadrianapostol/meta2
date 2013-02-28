@@ -1,0 +1,54 @@
+#!/bin/sh
+
+set -x
+set -e
+
+usage () 
+{
+    echo "usage: meta2c [OPTION ...] FILENAME [-o OUTFILE]"
+    exit 1
+}
+
+infile=
+outfile=a.out
+options=
+
+while test -n "$1"; do
+    case "$1" in
+        -h|-help|--help) 
+	    usage;;
+	-o) 
+	    shift
+	    outfile="$1"
+	    shift;;
+    	-*) 
+	    options="$options $1"
+	    shift;;
+	*) 
+	    if test -n "$infile"; then
+		usage;
+	    fi
+	    infile="$1"
+	    shift;;
+    esac
+done
+
+test -n "$infile" || usage
+
+case "$outfile" in
+    *.m2m) 
+	meta2 $options <$infile >$outfile;;
+    *.c)
+	tempm2m=$(mktemp XXXXXXXX.m2m)
+	meta2 $options <"$infile" >$tempm2m
+	m2m2c <$tempm2m >"$outfile"
+	rm -f $tempm2m;;
+    *) 
+	tempm2m=$(mktemp XXXXXXXX.m2m)
+	tempc=$(mktemp XXXXXXXX.c)
+	meta2 $options <"$infile" >$tempm2m
+	m2m2c <$tempm2m >$temp2c
+	rm -f $tempm2m
+	gcc $tempc -o "$outfile"
+	rm -f $tempc;;
+esac
