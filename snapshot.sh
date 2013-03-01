@@ -28,4 +28,4 @@ echo '\n"' >>bootstrap/meta2.c
 cat meta2.h meta2.c >>bootstrap/meta2.c
 
 # commit bootstrap source
-#git commit -m "snapshot" bootstrap/meta2.c
+git commit -m "snapshot" bootstrap/meta2.c
