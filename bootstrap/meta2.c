@@ -373,7 +373,7 @@ main(int argc, char *argv[])
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
 	case 'v': 
-	  printf("%s", FINGERPRINT); 
+	  printf("\"\\\"%s\\\\n\\\"\" \\\n", FINGERPRINT); 
 	  exit(EXIT_SUCCESS);
 	case 'g':
 	  printf("%s", GENEALOGY);
