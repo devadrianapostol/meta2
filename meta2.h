@@ -14,11 +14,7 @@
 
 
 #ifndef FINGERPRINT
-# define FINGERPRINT           "<unknown fingerprint>"
-#endif
-
-#ifndef GENEALOGY
-# define GENEALOGY             "<unknown genealogy>"
+# define FINGERPRINT           "<unknown>"
 #endif
 
 #define DEFAULT_BUFFER_SIZE    1000000
@@ -342,7 +338,7 @@ OUT()
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-v] [-g]\n", prgname);
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-v]\n", prgname);
   exit(code);
 }
 
@@ -368,10 +364,7 @@ main(int argc, char *argv[])
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
 	case 'v': 
-	  printf("\"%s\\n\" \\\n", FINGERPRINT); 
-	  exit(EXIT_SUCCESS);
-	case 'g':
-	  fputs(GENEALOGY, stdout);
+	  printf("%s\n", FINGERPRINT); 
 	  exit(EXIT_SUCCESS);
 	default:
 	  usage(EXIT_FAILURE);

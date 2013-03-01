@@ -17,7 +17,7 @@ while test -n "$1"; do
     case "$1" in
         -h|-help|--help) 
 	    usage;;
-	-*v*|-*g*)
+	-*v*)
 	    exec meta2 "$1";;
 	-o) 
 	    shift
