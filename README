@@ -48,8 +48,9 @@ information about making "snapshots" to generate a reproducible
 bootstrapping variant.
 
 The default installation directories will be /usr/local/bin and
-/usr/local/include. You can override the installation prefix like
-this:
+/usr/local/include. You can override the installation prefix by giving
+"PREFIX=<prefix>" to the make(3) command, or edit "Makefile"
+accordingly:
 
   make PREFIX=/home/felix install
 
