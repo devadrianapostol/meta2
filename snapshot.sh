@@ -1,6 +1,8 @@
 #!/bin/bash
 # generate reproducible snapshot
 
+set -e
+
 # check for changes
 if git diff --quiet; then
 else
