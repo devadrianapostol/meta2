@@ -334,7 +334,14 @@ OUT()
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-v] [-g]\n", prgname);
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i]"
+#ifdef FINGERPRINT
+	  " [-v]"
+#endif
+#ifdef GENEALOGY
+	  " [-g]"
+#endif
+	  "\n", prgname);
   exit(code);
 }
 
