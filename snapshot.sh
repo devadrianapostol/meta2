@@ -24,9 +24,13 @@ make -f Makefile all check
 echo '#define FINGERPRINT "'$fingerprint'"' >bootstrap/meta2.c
 echo '#define GENEALOGY \' >>bootstrap/meta2.c
 bootstrap/meta2 -g >>bootstrap/meta2.c
-bootstrap/meta2 -v >>bootstrap/meta2.c
+parent=$(bootstrap/meta2 -v)
+echo '"\"'$parent'\\n\"" \' >>bootstrap/meta2.c
 echo '""' >>bootstrap/meta2.c
 cat meta2.h meta2.c >>bootstrap/meta2.c
+
+# regenerate meta2.c
+make -f Makefile bootstrap
 
 # commit bootstrap source
 if test "$1" \!= "-n"; then

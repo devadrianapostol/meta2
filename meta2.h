@@ -13,14 +13,6 @@
 #include <setjmp.h>
 
 
-#ifndef FINGERPRINT
-# define FINGERPRINT           "0000000000000000000000000000000000000000"
-#endif
-
-#ifndef GENEALOGY
-# define GENEALOGY             ""
-#endif
-
 #define DEFAULT_BUFFER_SIZE    1000000
 #define STACK_SIZE             4096
 
@@ -368,11 +360,21 @@ main(int argc, char *argv[])
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
 	case 'v': 
-	  printf("\"\\\"%s\\\\n\\\"\" \\\n", FINGERPRINT); 
+#ifdef FINGERPRINT
+	  printf("%s\n", FINGERPRINT); 
 	  exit(EXIT_SUCCESS);
+#else
+	  fprintf(stderr, "Error: no version available\n");
+	  exit(EXIT_FAILURE);
+#endif
 	case 'g':
+#ifdef GENEALOGY
 	  printf("%s", GENEALOGY);
 	  exit(EXIT_SUCCESS);
+#else
+	  fprintf(stderr, "Error: no genealogy available\n");
+	  exit(EXIT_FAILURE);
+#endif
 	default:
 	  usage(EXIT_FAILURE);
 	}
