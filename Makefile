@@ -1,9 +1,10 @@
-.PHONY: all clean dist bootstrap snapshot check
-
-
+PREFIX = /usr/local
 CC = gcc
 CFLAGS = -I. -g
 META2 = bootstrap/meta2
+
+
+.PHONY: all clean dist bootstrap snapshot check install
 
 
 all: meta2
@@ -17,8 +18,8 @@ meta2: meta2.c meta2.h
 meta2.c: meta2.meta2
 	$(META2) -q <$< >$@
 
-snapshot: meta2.c
-	cp $< bootstrap
+snapshot: all
+	bash snapshot.sh
 
 dist:
 	archive=meta2-$$(date +%Y%m%d); \
@@ -39,4 +40,10 @@ check: all
 	$(META2) -q <meta2.meta2 >meta2.c
 	$(MAKE) meta2
 	./meta2 -q <meta2.meta2 >meta2.2.c
-	diff -u meta2.c meta2.2.c
+	diff -bu meta2.c meta2.2.c
+
+install: all
+	mkdir -p $(PREFIX)/{bin,include}
+	install -m755 meta2 $(PREFIX)/bin
+	install -m755 meta2c $(PREFIX)/bin
+	install -m644 meta2.h $(PREFIX)/include
