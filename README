@@ -28,12 +28,11 @@ been built, running
 
   make
 
-will rebuilt your working version with whatever changes you made to
-the sources ("meta2.meta2" or "meta2.h"), using the bootstrap
-compiler.
+will rebuild your working binary with whatever changes you made to the
+sources ("meta2.meta2" or "meta2.h"), using the bootstrap compiler.
 
-To force a rebuild and compare the output of the new compiler with the
-source of the current version, enter
+To force a rebuild of the compiler with itself and compare the output
+of the new compiler with the source of the current one, enter
 
   make check
 
@@ -44,9 +43,9 @@ To install the program in your system, enter
 
   make install
 
-This will install the bootstrap compiler.
-
-XXX add information about taking snapshots, etc.
+This will install the bootstrap compiler. See below for more
+information about making "snapshots" to generate a reproducible
+bootstrapping variant.
 
 The default installation directories will be /usr/local/bin and
 /usr/local/include. You can override the installation prefix like
@@ -56,6 +55,11 @@ this:
 
 A script named "meta2c" is also available and might be more convenient
 for generating an executable directly from a parser-description.
+
+
+* Reproducibility
+
+XXX
 
 
 * Usage
