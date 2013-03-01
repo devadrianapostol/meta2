@@ -1,4 +1,6 @@
-#define FINGERPRINT "aef13a29b6aac2d3284b7db6aecbe2a7abe01a54"
+#define FINGERPRINT "4c9d2438fad29c009ab31854f3443d30dd74ebfe"
+#define GENEALOGY \
+"0000000000000000000000000000000000000000\n"
 /* meta2.h */
 
 
@@ -15,7 +17,11 @@
 
 
 #ifndef FINGERPRINT
-# define FINGERPRINT           "<unknown>"
+# define FINGERPRINT           "0000000000000000000000000000000000000000"
+#endif
+
+#ifndef GENEALOGY
+# define GENEALOGY             ""
 #endif
 
 #define DEFAULT_BUFFER_SIZE    1000000
@@ -339,7 +345,7 @@ OUT()
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-v]\n", prgname);
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-v] [-g]\n", prgname);
   exit(code);
 }
 
@@ -365,7 +371,10 @@ main(int argc, char *argv[])
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
 	case 'v': 
-	  printf("%s\n", FINGERPRINT); 
+	  printf("%s", FINGERPRINT); 
+	  exit(EXIT_SUCCESS);
+	case 'g':
+	  printf("%s", GENEALOGY);
 	  exit(EXIT_SUCCESS);
 	default:
 	  usage(EXIT_FAILURE);
