@@ -1,6 +1,10 @@
 /* meta2.h */
 
 
+#ifndef META2_H
+#define META2_H
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +12,14 @@
 #include <assert.h>
 #include <setjmp.h>
 
+
+#ifndef FINGERPRINT
+# define FINGERPRINT           "<unknown fingerprint>"
+#endif
+
+#ifndef GENEALOGY
+# define GENEALOGY             "<unknown genealogy>"
+#endif
 
 #define DEFAULT_BUFFER_SIZE    1000000
 #define STACK_SIZE             4096
@@ -23,7 +35,7 @@ char *previous;
 int label;
 int column;
 int line_number;
-int newline, force, trace, ci, dquotes;
+int newline, force, trace, ci, dquotes, noindent;
 int level;
 char *prgname;
 jmp_buf finished;
@@ -47,9 +59,11 @@ copy(char *str, int n)
 static void
 emit(char *str)
 {
-  while(column) {
-    putchar(' ');
-    --column;
+  if(!noindent) {
+    while(column) {
+      putchar(' ');
+      --column;
+    }
   }
 
   fputs(str, stdout);
@@ -328,7 +342,7 @@ OUT()
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q]\n", prgname);
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-v] [-g]\n", prgname);
   exit(code);
 }
 
@@ -338,7 +352,7 @@ main(int argc, char *argv[])
 {
   int i;
 
-  force = trace = ci = dquotes = 0;
+  force = trace = ci = dquotes = noindent = 0;
   prgname = argv[ 0 ];
 
   for(i = 1; i < argc; ++i) {
@@ -350,8 +364,15 @@ main(int argc, char *argv[])
 	case 'f': force = 1; break;
 	case 't': trace = 1; break;
 	case 'c': ci = 1; break;
+	case 'i': noindent = 1; break;
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
+	case 'v': 
+	  printf("\"%s\\n\" \\\n", FINGERPRINT); 
+	  exit(EXIT_SUCCESS);
+	case 'g':
+	  fputs(GENEALOGY, stdout);
+	  exit(EXIT_SUCCESS);
 	default:
 	  usage(EXIT_FAILURE);
 	}
@@ -379,3 +400,6 @@ main(int argc, char *argv[])
   
   return 0;
 }
+
+
+#endif
