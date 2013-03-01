@@ -44,6 +44,6 @@ check: all
 
 install: all
 	mkdir -p $(PREFIX)/{bin,include}
-	install -m755 meta2 $(PREFIX)/bin
+	install -m755 $(META2) $(PREFIX)/bin
 	install -m755 meta2c $(PREFIX)/bin
 	install -m644 meta2.h $(PREFIX)/include
