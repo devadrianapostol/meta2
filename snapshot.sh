@@ -16,7 +16,7 @@ fingerprint=$(git rev-parse HEAD)
 
 # force rebuild
 touch meta2.meta2
-gmake -f Makefile META2=./meta2 all check
+make -f Makefile META2=./meta2 all check
 
 # generate bootstrap source
 echo '#define FINGERPRINT "'$fingerprint'"' >bootstrap/meta2.c
