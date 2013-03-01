@@ -24,7 +24,7 @@ echo '#define GENEALOGY \' >>bootstrap/meta2.c
 ./meta2 -g >>bootstrap/meta2.c
 echo -n '"' >>bootstrap/meta2.c
 ./meta2 -v >>bootstrap/meta2.c
-echo '"' >>byootstrap/meta2.c
+echo '\n"' >>byootstrap/meta2.c
 cat meta2.h meta2.c >>bootstrap/meta2.c
 
 # commit bootstrap source
