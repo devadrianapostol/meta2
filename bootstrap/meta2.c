@@ -1,7 +1,8 @@
 #define FINGERPRINT "c1775c27658a929552f0fdae82cec102b90711ca"
 #define GENEALOGY \
 "\"0000000000000000000000000000000000000000\\n\" \\\n" \
-"\"b9721df46f51de21d91b0421d3f908224257a5e7\\n\" \\\n"
+"\"b9721df46f51de21d91b0421d3f908224257a5e7\\n\" \\\n" \
+""
 /* meta2.h */
 
 
