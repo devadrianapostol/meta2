@@ -18,7 +18,7 @@
 #endif
 
 #ifndef GENEALOGY
-# define GENEALOGY             NULL
+# define GENEALOGY             ""
 #endif
 
 #define DEFAULT_BUFFER_SIZE    1000000
