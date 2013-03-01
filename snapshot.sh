@@ -32,5 +32,5 @@ cat meta2.h meta2.c >>bootstrap/meta2.c
 if test "$1" \!= "-n"; then
     echo "committing snapshot"
     git commit -m "snapshot" bootstrap/meta2.c
-endif
+fi
 
