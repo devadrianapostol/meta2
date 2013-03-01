@@ -27,11 +27,11 @@ echo '#define FINGERPRINT "'$fingerprint'"' >bootstrap/meta2.c
 echo '#define GENEALOGY \' >>bootstrap/meta2.c
 
 for v in $(bootstrap/meta2 -g); do
-    echo '"'$v'\\n" \' >>bootstrap/meta2.c
+    echo '"'$v'\n" \' >>bootstrap/meta2.c
 done
 
 parent=$(bootstrap/meta2 -v)
-echo '"'$parent'\\n"' >>bootstrap/meta2.c
+echo '"'$parent'\n"' >>bootstrap/meta2.c
 cat meta2.h meta2.c >>bootstrap/meta2.c
 
 # regenerate meta2.c
