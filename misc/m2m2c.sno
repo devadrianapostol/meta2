@@ -33,7 +33,7 @@ loop	instr = input				:f(done)
 	output = "CLL(" lbl ",___" count ");"
 	count = count + 1			:(loop)
 loop.0	instr identifier . lbl rpos(0)		:f(loop.1)
-	output = "___" lbl ":;"	  		:(loop)
+	output = lbl ":;"	  		:(loop)
 loop.1	instr ws opr . op rpos(0)		:f(loop.11)
 	output = op "();"			:(loop)
 loop.11 instr ws opr . op ws rem . opn  	:f(error)
@@ -42,7 +42,7 @@ loop.11 instr ws opr . op ws rem . opn  	:f(error)
 loop.2	opn number . num rpos(0)		:f(loop.3)
 	output = op "(" num ");"		:(loop)
 loop.3	opn identifier . id rpos(0)		:f(error)
-	output = op "(___" id ");"		:(loop)
+	output = op "(" id ");"		:(loop)
 
 error	terminal = "BAD SYNTAX: " instr
 	&code = 1				:(end)
