@@ -20,7 +20,7 @@ touch meta2.meta2
 make -f Makefile all check
 
 # create bootstrap sources
-./generate-version
+bash generate-version
 
 # obtain HEAD id
 fingerprint=$(git rev-parse HEAD)
