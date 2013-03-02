@@ -322,9 +322,16 @@ LB()
 static void
 OUT()
 {
-  /*XXX respect current "column" setting? */
   column = 8;
   putchar('\n');
+}
+
+
+/* extension: set left margin to 0 (like .LABEL), used for "< ... >" in Meta-IIb */
+static void
+LM0()
+{
+  column = 0;
 }
 
 

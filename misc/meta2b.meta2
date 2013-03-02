@@ -6,7 +6,7 @@ OUT1 = '*1' .OUT('GN1();')
      / .STRING .OUT('CL(' * ');') .,
 
 OUTPUT = ('.OUT' '(' $OUT1 ')' 
-       / '<' $OUT1 '>'
+       / '<' .OUT('LM0();') $OUT1 '>'
        / '.LABEL' .OUT('LB();') OUT1) .OUT('OUT();') .,
 
 EX3 = .ID .OUT('CLL(' * ',___' *1 ');') 
