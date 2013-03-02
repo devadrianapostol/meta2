@@ -4,6 +4,9 @@
 
 set -e
 
+# get HEAD commit
+current=$(git rev-parse HEAD)
+
 # check for changes
 if git diff --quiet; then :
 else
@@ -21,4 +24,6 @@ fi
 
 git checkout "$1"
 make -f Makefile bootstrap
-git checkout -f master
+
+# restore HEAD
+git checkout -f $current
