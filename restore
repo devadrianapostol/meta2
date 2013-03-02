@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# usage: bash restore COMMIT
+
+set -e
+
+# check for changes
+if git diff --quiet; then :
+else
+    if test "$1" \!= "-n"; then
+	echo "There are still uncommited changes in the working directory."
+	echo "Please commit them first before restoring."
+	exit 1
+    fi
+fi
+
+if test -z "$1"; then
+    echo "usage: bash restore COMMIT"
+    exit 1
+fi
+
+git checkout "$1"
+make -f Makefile bootstrap
+git checkout -f master
