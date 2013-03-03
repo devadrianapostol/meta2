@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# usage: bash scripts/regenerate COMMIT
+# usage: bash scripts/regenerate [COMMIT]
 
 set -e
 
@@ -17,9 +17,10 @@ else
     fi
 fi
 
-if test -z "$1"; then
-    echo "usage: bash regenerate COMMIT"
-    exit 1
+target="$1"
+
+if test -z "$target"; then
+    target=$(shell bootstrap/meta2 -v)
 fi
 
 # build targeted version
