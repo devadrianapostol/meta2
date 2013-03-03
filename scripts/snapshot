@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: bash snapshot [-n] 
+# usage: bash scripts/snapshot [-n] 
 #
 # generate reproducible snapshot
 
@@ -20,7 +20,7 @@ touch meta2.meta2
 make -f Makefile all check
 
 # create bootstrap sources
-bash generate-version
+bash scripts/generate-version
 
 # obtain HEAD id
 fingerprint=$(git rev-parse HEAD)

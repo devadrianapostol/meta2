@@ -19,7 +19,7 @@ meta2.c: meta2.meta2
 	$(META2) -q <$< >$@
 
 snapshot: all
-	bash snapshot
+	bash scripts/snapshot
 
 dist:
 	archive=meta2-$$(date +%Y%m%d); \

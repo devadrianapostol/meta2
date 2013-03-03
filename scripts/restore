@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# usage: bash regenerate COMMIT
+# usage: bash scripts/restore COMMIT
 
 set -e
 
@@ -18,24 +18,12 @@ else
 fi
 
 if test -z "$1"; then
-    echo "usage: bash regenerate COMMIT"
+    echo "usage: bash restore COMMIT"
     exit 1
 fi
 
-# build targeted version
 git checkout "$1"
 make -f Makefile bootstrap
-
-# now retrieve genealogy and build each ancestor
-for v in $(bootstrap/meta2 -g); do
-    echo $v
-    git checkout -f $v
-    make -f Makefile bootstrap
-    touch meta2.meta2
-    make -f Makefile all check
-    bash generate-version
-    make -f Makefile bootstrap
-done
 
 # restore HEAD
 git checkout -f $current

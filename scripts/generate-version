@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: bash generate-version
+# usage: bash scripts/generate-version
 #
 # generate self-contained and versioned bootstrap sources
 
