@@ -183,16 +183,18 @@ static void
 SR()
 {
   size_t n;
-  char *pos;
+  char *pos, delim;
 
   flag = 0;
   skipws();
 
   if(*position == '\'' || (dquotes && *position == '\"')) {
+    delim = *position;
     pos = position + 1;
 
-    for(n = 0; *pos != *position; ++n) {
-      if(pos >= limit) return;
+    for(n = 0; *pos != delim; ++n) {
+      if(pos >= limit) return;	/* XXX return? */
+      else if(*pos == '\\') pos += 2;
       else ++pos;
     } 
 
