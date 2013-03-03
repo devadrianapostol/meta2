@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# usage: bash regenerate COMMIT
+
+set -e
+
+# get HEAD commit
+current=$(git rev-parse HEAD)
+
+# check for changes
+if git diff --quiet; then :
+else
+    if test "$1" \!= "-n"; then
+	echo "There are still uncommited changes in the working directory."
+	echo "Please commit them first before restoring."
+	exit 1
+    fi
+fi
+
+if test -z "$1"; then
+    echo "usage: bash regenerate COMMIT"
+    exit 1
+fi
+
+# build targeted version
+git checkout "$1"
+make -f Makefile bootstrap
+
+# now retrieve genealogy and build each ancestor
+for v in $(bootstrap/meta2 -g); do
+    echo $v
+    git checkout -f $v
+    make -f Makefile bootstrap
+    touch meta2.meta2
+    make -f Makefile all check
+    bash generate-version
+    make -f Makefile bootstrap
+done
+
+# restore HEAD
+git checkout -f $current
