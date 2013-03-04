@@ -1,0 +1,13 @@
+.syntax simple
+
+val = .number <'PUSH ' *>;
+mulop = '*' val <'MUL'>
+      | '/' val <'DIV'>;
+addop = '+' ex2 <'ADD'>
+      | '-' ex2 <'SUB'>;
+ex2 = val $mulop;
+ex1 = ex2 $addop;
+
+simple = ex1;
+
+.end
