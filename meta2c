@@ -38,8 +38,7 @@ test -n "$infile" || usage
 
 case "$outfile" in
     *.c)
-	tempc=$(mktemp XXXXXXXX.c)
-	meta2 $options <"$infile" >$tempc;;
+	meta2 $options <"$infile" >"$outfile";;
     *) 
 	tempc=$(mktemp XXXXXXXX.c)
 	meta2 $options <"$infile" >$tempc
