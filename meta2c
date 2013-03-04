@@ -39,6 +39,11 @@ test -n "$infile" || usage
 case "$outfile" in
     *.c)
 	meta2 $options <"$infile" >"$outfile";;
+    *.o) 
+	tempc=$(mktemp XXXXXXXX.c)
+	meta2 $options <"$infile" >$tempc
+	gcc -c -I. -O2 $tempc -o "$outfile"
+	rm -f $tempc;;
     *) 
 	tempc=$(mktemp XXXXXXXX.c)
 	meta2 $options <"$infile" >$tempc
