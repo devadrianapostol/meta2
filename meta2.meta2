@@ -6,6 +6,7 @@ OUT1 = '*1' .OUT('GN1();')
      / .STRING .OUT('CL(' * ');') .,
 
 OUTPUT = ('.OUT' '(' $OUT1 ')' 
+       / '<' .OUT('LM0();') $OUT1 '>'
        / '.LABEL' .OUT('LB();') OUT1) .OUT('OUT();') .,
 
 EX3 = .ID .OUT('CLL(' * ',___' *1 ');') 
@@ -21,9 +22,9 @@ EX2 = (EX3 .OUT('BF(' *1 ');') / OUTPUT)
     $(EX3 .OUT('BE();') / OUTPUT)
     .LABEL *1 .OUT(':;') .,
 
-EX1 = EX2 $('/' .OUT('BT(' *1 ');') EX2) .LABEL *1 .OUT(':;') .,
+EX1 = EX2 $(('/' / '|') .OUT('BT(' *1 ');') EX2) .LABEL *1 .OUT(':;') .,
 
-ST = .ID .LABEL * .OUT(':;') '=' EX1 '.,' .OUT('R();') .,
+ST = .ID .LABEL * .OUT(':;') '=' EX1 ('.,' / ';') .OUT('R();') .,
 
 PROGRAM = '.SYNTAX' .ID 
 	.OUT('#include <meta2.h>')
