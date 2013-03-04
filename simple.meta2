@@ -1,6 +1,7 @@
 .syntax simple
 
-val = .number <'PUSH ' *>;
+val = .number <'PUSH ' *>
+    | '(' ex1 ')';
 mulop = '*' val <'MUL'>
       | '/' val <'DIV'>;
 addop = '+' ex2 <'ADD'>
