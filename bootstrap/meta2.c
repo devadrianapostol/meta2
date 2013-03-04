@@ -1,6 +1,6 @@
-#define FINGERPRINT "d6557ec1dd62aedebdb6d2d93a62b37c23ccffeb"
+#define FINGERPRINT "1cd315abd4e675d3c73f68df72e6d66630221690"
 #define GENEALOGY \
-""
+"d6557ec1dd62aedebdb6d2d93a62b37c23ccffeb\n"
 /* meta2.h */
 
 
@@ -186,16 +186,18 @@ static void
 SR()
 {
   size_t n;
-  char *pos;
+  char *pos, delim;
 
   flag = 0;
   skipws();
 
   if(*position == '\'' || (dquotes && *position == '\"')) {
+    delim = *position;
     pos = position + 1;
 
-    for(n = 0; *pos != *position; ++n) {
-      if(pos >= limit) return;
+    for(n = 0; *pos != delim; ++n) {
+      if(pos >= limit) return;	/* XXX return? */
+      else if(*pos == '\\') pos += 2;
       else ++pos;
     } 
 
@@ -215,6 +217,7 @@ static void
 NUM()
 {
   size_t n;
+  int en, dot;
   char *pos;
 
   skipws();
@@ -222,17 +225,40 @@ NUM()
 
   if(isdigit(*position)) {
     flag = 1;
-    pos = position + 1;
+    dot = 0;
+    en = 0;
+    pos = position;
+    n = 0;
 
-    for(n = 0;
-	position < limit && (isdigit(*position) || 
-			     (strchr(".eE-+", *position) && *(position - 1) != *position));
-	++n);
+    while(position < limit) {
+      if(!isdigit(*position)) {
+	if(*position == 'e' || *position == 'E') {
+	  if(en) break;
+	  else if(position == limit - 1) break;
+	  else if(isdigit(position[ 1 ])) en = 1;
+	  else if((position[ 1 ] == '+' || position[ 1 ] == '-') &&
+		  position < limit - 2 && isdigit(position[ 2 ])) {
+	    en = 1;
+	    ++position;
+	    ++n;
+	  }
+	  else break;
+	}
+	else if(*position == '.') {
+	  if(dot) break;
+	  
+	  dot = 1;
+	}
+	else break;
+      }
+
+      ++position;
+      ++n;
+    }
 
     free(previous);
     previous = copy(pos, n);
     flag = 1;
-    position = pos;
   }
 }
 
@@ -476,91 +502,106 @@ L6
 L5
         :;
         BT(L8);
-        TST(".LABEL");
+        TST("<");
         BF(L9);
-        CL("LB();");
+        CL("LM0();");
         OUT();
-        CLL(OUT1,___L10);
+L10
+        :;
+        CLL(OUT1,___L11);
+        BT(L10);
+        SET();
+        BE();
+        TST(">");
         BE();
 L9
         :;
+        BT(L8);
+        TST(".LABEL");
+        BF(L12);
+        CL("LB();");
+        OUT();
+        CLL(OUT1,___L13);
+        BE();
+L12
+        :;
 L8
         :;
-        BF(L11);
+        BF(L14);
         CL("OUT();");
         OUT();
-L11
+L14
         :;
-L12
+L15
         :;
         R();
 EX3
         :;
         ID();
-        BF(L13);
+        BF(L16);
         CL("CLL(");
         CI();
         CL(",___");
         GN1();
         CL(");");
         OUT();
-L13
+L16
         :;
-        BT(L14);
+        BT(L17);
         SR();
-        BF(L15);
+        BF(L18);
         CL("TST(");
         CI();
         CL(");");
         OUT();
-L15
-        :;
-        BT(L14);
-        TST(".ID");
-        BF(L16);
-        CL("ID();");
-        OUT();
-L16
-        :;
-        BT(L14);
-        TST(".NUMBER");
-        BF(L17);
-        CL("NUM();");
-        OUT();
-L17
-        :;
-        BT(L14);
-        TST(".STRING");
-        BF(L18);
-        CL("SR();");
-        OUT();
 L18
         :;
-        BT(L14);
-        TST("(");
+        BT(L17);
+        TST(".ID");
         BF(L19);
-        CLL(EX1,___L20);
-        BE();
-        TST(")");
-        BE();
+        CL("ID();");
+        OUT();
 L19
         :;
-        BT(L14);
-        TST(".EMPTY");
+        BT(L17);
+        TST(".NUMBER");
+        BF(L20);
+        CL("NUM();");
+        OUT();
+L20
+        :;
+        BT(L17);
+        TST(".STRING");
         BF(L21);
-        CL("SET");
+        CL("SR();");
         OUT();
 L21
         :;
-        BT(L14);
-        TST("$");
+        BT(L17);
+        TST("(");
         BF(L22);
+        CLL(EX1,___L23);
+        BE();
+        TST(")");
+        BE();
+L22
+        :;
+        BT(L17);
+        TST(".EMPTY");
+        BF(L24);
+        CL("SET");
+        OUT();
+L24
+        :;
+        BT(L17);
+        TST("$");
+        BF(L25);
         LB();
         GN1();
         OUT();
         CL(":;");
         OUT();
-        CLL(EX3,___L23);
+        CLL(EX3,___L26);
         BE();
         CL("BT(");
         GN1();
@@ -568,45 +609,45 @@ L21
         OUT();
         CL("SET();");
         OUT();
-L22
+L25
         :;
-L14
+L17
         :;
         R();
 EX2
         :;
-        CLL(EX3,___L24);
-        BF(L25);
+        CLL(EX3,___L27);
+        BF(L28);
         CL("BF(");
         GN1();
         CL(");");
         OUT();
-L25
-        :;
-        BT(L26);
-        CLL(OUTPUT,___L27);
-        BF(L28);
 L28
         :;
-L26
+        BT(L29);
+        CLL(OUTPUT,___L30);
+        BF(L31);
+L31
         :;
-        BF(L29);
-L30
+L29
         :;
-        CLL(EX3,___L31);
         BF(L32);
-        CL("BE();");
-        OUT();
-L32
-        :;
-        BT(L33);
-        CLL(OUTPUT,___L34);
-        BF(L35);
-L35
-        :;
 L33
         :;
-        BT(L30);
+        CLL(EX3,___L34);
+        BF(L35);
+        CL("BE();");
+        OUT();
+L35
+        :;
+        BT(L36);
+        CLL(OUTPUT,___L37);
+        BF(L38);
+L38
+        :;
+L36
+        :;
+        BT(L33);
         SET();
         BE();
         LB();
@@ -614,30 +655,40 @@ L33
         OUT();
         CL(":;");
         OUT();
-L29
+L32
         :;
-L36
+L39
         :;
         R();
 EX1
         :;
-        CLL(EX2,___L37);
-        BF(L38);
-L39
+        CLL(EX2,___L40);
+        BF(L41);
+L42
         :;
         TST("/");
-        BF(L40);
+        BF(L43);
+L43
+        :;
+        BT(L44);
+        TST("|");
+        BF(L45);
+L45
+        :;
+L44
+        :;
+        BF(L46);
         CL("BT(");
         GN1();
         CL(");");
         OUT();
-        CLL(EX2,___L41);
+        CLL(EX2,___L47);
         BE();
-L40
+L46
         :;
-L42
+L48
         :;
-        BT(L39);
+        BT(L42);
         SET();
         BE();
         LB();
@@ -645,15 +696,15 @@ L42
         OUT();
         CL(":;");
         OUT();
-L38
+L41
         :;
-L43
+L49
         :;
         R();
 ST
         :;
         ID();
-        BF(L44);
+        BF(L50);
         LB();
         CI();
         OUT();
@@ -661,21 +712,31 @@ ST
         OUT();
         TST("=");
         BE();
-        CLL(EX1,___L45);
+        CLL(EX1,___L51);
         BE();
         TST(".,");
+        BF(L52);
+L52
+        :;
+        BT(L53);
+        TST(";");
+        BF(L54);
+L54
+        :;
+L53
+        :;
         BE();
         CL("R();");
         OUT();
-L44
+L50
         :;
-L46
+L55
         :;
         R();
 PROGRAM
         :;
         TST(".SYNTAX");
-        BF(L47);
+        BF(L56);
         ID();
         BE();
         CL("#include <meta2.h>");
@@ -686,19 +747,19 @@ PROGRAM
         CI();
         CL(");");
         OUT();
-L48
+L57
         :;
-        CLL(ST,___L49);
-        BT(L48);
+        CLL(ST,___L58);
+        BT(L57);
         SET();
         BE();
         TST(".END");
         BE();
         CL("}");
         OUT();
-L47
+L56
         :;
-L50
+L59
         :;
         R();
         }
