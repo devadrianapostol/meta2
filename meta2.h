@@ -214,6 +214,7 @@ static void
 NUM()
 {
   size_t n;
+  int en, dot;
   char *pos;
 
   skipws();
@@ -221,13 +222,36 @@ NUM()
 
   if(isdigit(*position)) {
     flag = 1;
+    dot = 0;
+    en = 0;
     pos = position;
+    n = 0;
 
-    for(n = 0;
-	position < limit && (isdigit(*position) || 
-			     (strchr(".eE-+", *position) && *(position - 1) != *position));
-	++position)
+    while(position < limit) {
+      if(!isdigit(*position)) {
+	if(*position == 'e' || *position == 'E') {
+	  if(en) break;
+	  else if(position == limit - 1) break;
+	  else if(isdigit(position[ 1 ])) en = 1;
+	  else if((position[ 1 ] == '+' || position[ 1 ] == '-') &&
+		  position < limit - 2 && isdigit(position[ 2 ])) {
+	    en = 1;
+	    ++position;
+	    ++n;
+	  }
+	  else break;
+	}
+	else if(*position == '.') {
+	  if(dot) break;
+	  
+	  dot = 1;
+	}
+	else break;
+      }
+
+      ++position;
       ++n;
+    }
 
     free(previous);
     previous = copy(pos, n);
