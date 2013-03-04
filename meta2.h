@@ -221,17 +221,17 @@ NUM()
 
   if(isdigit(*position)) {
     flag = 1;
-    pos = position + 1;
+    pos = position;
 
     for(n = 0;
 	position < limit && (isdigit(*position) || 
 			     (strchr(".eE-+", *position) && *(position - 1) != *position));
-	++n);
+	++position)
+      ++n;
 
     free(previous);
     previous = copy(pos, n);
     flag = 1;
-    position = pos;
   }
 }
 
