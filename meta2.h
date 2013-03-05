@@ -379,8 +379,8 @@ usage(int code)
 }
 
 
-int
-main(int argc, char *argv[])
+void
+initialize(int argc, char *argv[])
 {
   int i;
 
@@ -431,7 +431,12 @@ main(int argc, char *argv[])
   flag = newline = 0;
   label = 0;
   column = 8;
+}
 
+
+void
+start()
+{
   if(setjmp(finished)) {
     skipws();
 
@@ -439,9 +444,19 @@ main(int argc, char *argv[])
       fail("unexpected input");
   }
   else run();
-  
-  return 0;
 }
 
 
+#ifndef EMBED
+int
+main(int argc, char *argv[])
+{
+  initialize(argc, argv);
+  start();  
+  return 0;
+}
 #endif
+
+
+#endif
+
