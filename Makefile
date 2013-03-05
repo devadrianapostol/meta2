@@ -43,7 +43,7 @@ check: all
 	diff -bu meta2.c meta2.2.c
 	./meta2 -cq <simple.meta2 >simple.c
 	$(CC) $(CFLAGS) simple.c
-	echo "3+4*(5+6)" | ./a.out | cmp - simple.out
+	echo "3+4*(5+6.2e-5)" | ./a.out | cmp - simple.out
 
 install: all
 	mkdir -p $(PREFIX)/{bin,include}
