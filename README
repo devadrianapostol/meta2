@@ -181,6 +181,14 @@ the initial state.
 
 4. "|" may be used as alternative to "/".
 
+5. ".NUMBER" accepts floating point numbers, optionally with scientific
+   notation. The number-syntax accepted corresponds to the following
+   Meta-II description:
+
+   DIGIT = '0' / '1' / '2' / '3' / '4' / '5' / '6' / '7' / '8' / '9'
+   NUMBER = $DIGIT ('.' $DIGIT / .EMPTY) 
+   	    (('e' / 'E') ('+' / '-' / .EMPTY) $DIGIT / .EMPTY) .,
+
 
 * History
 
