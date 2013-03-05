@@ -1,6 +1,7 @@
-#define FINGERPRINT "1cd315abd4e675d3c73f68df72e6d66630221690"
+#define FINGERPRINT "0eddeef982abef7823e06b7a26a19d85f6a93e8d"
 #define GENEALOGY \
-"d6557ec1dd62aedebdb6d2d93a62b37c23ccffeb\n"
+"d6557ec1dd62aedebdb6d2d93a62b37c23ccffeb\n" \
+"1cd315abd4e675d3c73f68df72e6d66630221690\n"
 /* meta2.h */
 
 
@@ -245,7 +246,7 @@ NUM()
 	  else break;
 	}
 	else if(*position == '.') {
-	  if(dot) break;
+	  if(en || dot) break;
 	  
 	  dot = 1;
 	}
@@ -382,8 +383,8 @@ usage(int code)
 }
 
 
-int
-main(int argc, char *argv[])
+void
+initialize(int argc, char *argv[])
 {
   int i;
 
@@ -434,7 +435,12 @@ main(int argc, char *argv[])
   flag = newline = 0;
   label = 0;
   column = 8;
+}
 
+
+void
+start()
+{
   if(setjmp(finished)) {
     skipws();
 
@@ -442,12 +448,22 @@ main(int argc, char *argv[])
       fail("unexpected input");
   }
   else run();
-  
-  return 0;
 }
 
 
+#ifndef EMBED
+int
+main(int argc, char *argv[])
+{
+  initialize(argc, argv);
+  start();  
+  return 0;
+}
 #endif
+
+
+#endif
+
         #include <meta2.h>
         void run() {
         ADR(PROGRAM);
