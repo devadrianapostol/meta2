@@ -242,7 +242,7 @@ NUM()
 	  else break;
 	}
 	else if(*position == '.') {
-	  if(dot) break;
+	  if(en || dot) break;
 	  
 	  dot = 1;
 	}
