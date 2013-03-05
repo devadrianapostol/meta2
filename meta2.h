@@ -27,7 +27,7 @@ char *previous;
 int label;
 int column;
 int line_number;
-int newline, force, trace, ci, dquotes, noindent;
+int newline, force, trace, ci, dquotes, noindent, keepws;
 int level;
 char *prgname;
 jmp_buf finished;
@@ -104,6 +104,8 @@ next()
 static void
 skipws()
 {
+  if(keepws) return;
+
   while(position < limit) {
     char c = next();
 
@@ -367,7 +369,7 @@ LM0()
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i]"
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-b]"
 #ifdef FINGERPRINT
 	  " [-v]"
 #endif
@@ -384,7 +386,7 @@ initialize(int argc, char *argv[])
 {
   int i;
 
-  force = trace = ci = dquotes = noindent = 0;
+  force = trace = ci = dquotes = noindent = keepws = 0;
   prgname = argv[ 0 ];
 
   for(i = 1; i < argc; ++i) {
@@ -399,6 +401,7 @@ initialize(int argc, char *argv[])
 	case 'i': noindent = 1; break;
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
+	case 'b': keepws = 1; break;
 	case 'v': 
 #ifdef FINGERPRINT
 	  printf("%s\n", FINGERPRINT); 

@@ -96,6 +96,11 @@ respectively, and understands the following command-line options:
      always written with double-quote delimiters. "-q" is required
      when generating a parser from "meta2.meta2".
 
+  -b
+
+     Do not skip whitespace when looking for the next match. The default
+     is to skip any whitespace before matching.
+
   -i
 
      Enable "case-insensitive" mode. When matching literal strings,
