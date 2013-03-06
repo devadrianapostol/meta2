@@ -65,6 +65,13 @@ A script named "meta2c" is also available and compiles a parser
 description directly into C, an object file or an executable (the
 default is to generate an executable).
 
+There is an emacs mode for .meta2 files in "misc/meta2-mode.el" which
+provides some syntax highlighting. To install it, put "meta2-mode.el"
+somewhere into your load path and evaluate
+
+  (require 'meta2-mode)
+  (add-to-list 'auto-mode-alist '("\\.meta2\\'" . meta2-mode))
+
 
 * Usage
 
@@ -193,6 +200,10 @@ the initial state.
    DIGIT = '0' / '1' / '2' / '3' / '4' / '5' / '6' / '7' / '8' / '9'
    NUMBER = $DIGIT ('.' $DIGIT / .EMPTY) 
    	    (('e' / 'E') ('+' / '-' / .EMPTY) $DIGIT / .EMPTY) .,
+
+6. ".LENGTH <n>" matches a fixed number of characters in the input,
+   (whitespace is not skipped). This can only fail if the remaining
+   input has less than <n> characters.
 
 
 * History
