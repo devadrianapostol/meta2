@@ -16,6 +16,7 @@ EX3 = .ID .OUT('CLL(' * ',___' *1 ');')
     | '.STRING' .OUT('SR();') 
     | '(' EX1 ')' 
     | '.EMPTY' .OUT('SET') 
+    | '.LENGTH' .NUMBER .OUT('LEN(' * ');')
     | '$' .LABEL *1 .OUT(':;') EX3 .OUT('BT(' *1 ');') .OUT('SET();') ;
 
 EX2 = (EX3 .OUT('BF(' *1 ');') | OUTPUT)
