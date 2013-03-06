@@ -4,9 +4,6 @@
 
 set -e
 
-# get HEAD commit
-current=$(git rev-parse HEAD)
-
 # check for changes
 if git diff --quiet; then :
 else
@@ -18,12 +15,13 @@ else
 fi
 
 if test -z "$1"; then
-    echo "usage: bash restore COMMIT"
+    echo "usage: bash scripts/restore COMMIT"
     exit 1
 fi
 
-git checkout "$1"
-make -f Makefile bootstrap
+# copy scripts directory so that checking out the tree does not
+# interfere with script-execution
+rm -fr scripts.tmp
+cp -r scripts scripts.tmp
 
-# restore HEAD
-git checkout -f $current
+exec scripts.tmp/restore-2 "$1"

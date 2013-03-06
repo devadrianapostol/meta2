@@ -4,9 +4,6 @@
 
 set -e
 
-# get HEAD commit
-current=$(git rev-parse HEAD)
-
 # check for changes
 if git diff --quiet; then :
 else
@@ -23,20 +20,9 @@ if test -z "$target"; then
     target=$(shell bootstrap/meta2 -v)
 fi
 
-# build targeted version
-git checkout "$1"
-make -f Makefile bootstrap
+# copy scripts directory so that checking out the tree does not
+# interfere with script-execution
+rm -fr scripts.tmp
+cp -r scripts scripts.tmp
 
-# now retrieve genealogy and build each ancestor
-for v in $(bootstrap/meta2 -g); do
-    echo $v
-    git checkout -f $v
-    make -f Makefile bootstrap
-    touch meta2.meta2
-    make -f Makefile all check
-    bash scripts/generate-version
-    make -f Makefile bootstrap
-done
-
-# restore HEAD
-git checkout -f $current
+exec scripts.tmp/regenerate-2 "$target"

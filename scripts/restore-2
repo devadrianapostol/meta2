@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# usage: bash scripts.tmp/restore-2 COMMIT
+#
+# This script should not be called directly - see scripts/restore
+
+set -e
+
+if test -z "$1"; then
+    echo "usage: scripts.tmp/restore-2 COMMIT"
+    exit 1
+fi
+
+# get HEAD commit
+current=$(git rev-parse HEAD)
+
+git reset --hard "$1"
+make -f Makefile bootstrap
+
+# restore HEAD
+git reset --hard $current

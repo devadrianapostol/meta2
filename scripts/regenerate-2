@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# usage: bash scripts.tmp/regenerate-2 COMMIT
+#
+# This script should not be called directly - see scripts/regenerate
+
+set -e
+
+if test -z "$1"; then
+    echo "usage: scripts.tmp/regenerate-2 COMMIT"
+    exit 1
+fi
+
+# get HEAD commit
+current=$(git rev-parse HEAD)
+target="$1"
+
+# build targeted version
+git checkout "$1"
+make -f Makefile bootstrap
+
+# now retrieve genealogy and build each ancestor
+for v in $(bootstrap/meta2 -g); do
+    echo $v
+    git reset --hard $v
+    make -f Makefile bootstrap
+    touch meta2.meta2
+    make -f Makefile all check
+    bash scripts/generate-version
+    make -f Makefile bootstrap
+done
+
+# restore HEAD
+git reset --hard $current
