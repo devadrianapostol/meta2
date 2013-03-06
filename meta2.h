@@ -33,7 +33,12 @@ char *prgname;
 jmp_buf finished;
 
 
-void run();
+/* Exported API */
+void input(char *start, char *end);
+void run();			/* provided by generated parser */
+void start();
+void read_input();
+void initialize(int argc, char *argv[]);
 
 
 static char *
@@ -118,7 +123,15 @@ skipws()
 }
 
 
-static void
+void
+input(char *start, char *end)
+{
+  buffer = start;
+  limit = end;
+}
+
+
+void
 read_input()
 {
   size_t n, len;
@@ -355,6 +368,9 @@ OUT()
 }
 
 
+#define ADR(lbl)       goto lbl
+
+
 /* extension: set left margin to 0 (like .LABEL), used for "< ... >" in Meta-IIb */
 static void
 LM0()
@@ -363,7 +379,20 @@ LM0()
 }
 
 
-#define ADR(lbl)       goto lbl
+/* extension: match string of specific length */
+static void 
+LEN(int n)
+{
+  char *pos;
+
+  if(position + n > limit) flag = 0;
+  else {
+    flag = 1;
+    free(previous);
+    previous = copy(position, n);
+    position += n;
+  }
+}
 
 
 static void
@@ -430,7 +459,6 @@ initialize(int argc, char *argv[])
   buffer = limit = NULL;
   previous = NULL;
   stack_index = -1;
-  read_input();
   flag = newline = 0;
   label = 0;
   column = 8;
@@ -455,6 +483,7 @@ int
 main(int argc, char *argv[])
 {
   initialize(argc, argv);
+  read_input();
   start();  
   return 0;
 }
@@ -462,4 +491,3 @@ main(int argc, char *argv[])
 
 
 #endif
-
