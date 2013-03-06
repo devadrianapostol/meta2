@@ -1,19 +1,25 @@
 #!/bin/bash
-# usage: bash scripts/generate-version
+# usage: bash scripts/generate-version [TARGETFILE]
 #
 # generate self-contained and versioned bootstrap sources
+
+target=bootstrap/meta2.c
+
+if test -nz "$1"; then
+    target="$1"
+fi
 
 # obtain HEAD id
 fingerprint=$(git rev-parse HEAD)
 
 # generate bootstrap source
-echo '#define FINGERPRINT "'$fingerprint'"' >bootstrap/meta2.c
-echo '#define GENEALOGY \' >>bootstrap/meta2.c
+echo '#define FINGERPRINT "'$fingerprint'"' >"$target"
+echo '#define GENEALOGY \' >>"$target"
 
 for v in $(bootstrap/meta2 -g); do
-    echo '"'$v'\n" \' >>bootstrap/meta2.c
+    echo '"'$v'\n" \' >>"$target"
 done
 
 parent=$(bootstrap/meta2 -v)
-echo '"'$parent'\n"' >>bootstrap/meta2.c
-cat meta2.h meta2.c >>bootstrap/meta2.c
+echo '"'$parent'\n"' >>"$target"
+cat meta2.h meta2.c >>"$target"
