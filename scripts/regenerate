@@ -25,4 +25,4 @@ fi
 rm -fr scripts.tmp
 cp -r scripts scripts.tmp
 
-exec scripts.tmp/regenerate-2 "$target"
+exec bash scripts.tmp/regenerate-2 "$target"

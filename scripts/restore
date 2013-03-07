@@ -24,4 +24,4 @@ fi
 rm -fr scripts.tmp
 cp -r scripts scripts.tmp
 
-exec scripts.tmp/restore-2 "$1"
+exec bash scripts.tmp/restore-2 "$1"
