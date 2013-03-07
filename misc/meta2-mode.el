@@ -27,13 +27,20 @@
   ;; keywords
   (list)
   '(("'[^']*'"  . font-lock-string-face)    ;; highlights labels
-    ("\\$\\|=\\|/\\||\\|;\\|\\.,\\|<\\|>" . font-lock-builtin-face) ;; highlights operators
+    ("\\$\\|=\\|/\\||\\|;\\|\\*\\|\\.,\\|<\\|>" . font-lock-builtin-face) ;; highlights operators
     ("\\.\\(OUT\\|LENGTH\\|STRING\\|NUMBER\\|ID\\|LABEL\\|SYNTAX\\|END\\)\\>"
      . font-lock-keyword-face))
   '("\\.meta2$")                                     ;; file endings
-  ;;XXX add code to allow lowercase keywords
    nil                                             ;; other function calls
   "A mode for Meta-II files"                       ;; doc string
 )
+
+(add-hook 'meta2-mode-hook
+          (lambda ()
+	    (setq font-lock-defaults (list 'generic-font-lock-defaults nil t))
+            (set (make-local-variable 'compile-command)
+                 (concat "meta2 <" buffer-file-name))))
+
+(add-to-list 'auto-mode-alist '("\\.meta2$" . meta2-mode))
 
 (provide 'meta2-mode)
