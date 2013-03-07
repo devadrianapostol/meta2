@@ -16,7 +16,7 @@ current=$(git rev-parse HEAD)
 target="$1"
 
 # build targeted version
-git checkout "$1"
+git reset --hard "$1"
 make -f Makefile bootstrap
 
 # now retrieve genealogy and build each ancestor
@@ -31,4 +31,4 @@ for v in $(bootstrap/meta2 -g); do
 done
 
 # restore HEAD
-git checkout $current
+git checkout -f $current

@@ -18,4 +18,4 @@ git reset --hard "$1"
 make -f Makefile bootstrap
 
 # restore HEAD
-git checkout $current
+git checkout -f $current
