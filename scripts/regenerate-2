@@ -31,4 +31,4 @@ for v in $(bootstrap/meta2 -g); do
 done
 
 # restore HEAD
-git checkout -f $current
+git reset --hard $current
