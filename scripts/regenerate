@@ -17,7 +17,7 @@ fi
 target="$1"
 
 if test -z "$target"; then
-    target=$(shell bootstrap/meta2 -v)
+    target=$(bootstrap/meta2 -v)
 fi
 
 # copy scripts directory so that checking out the tree does not
