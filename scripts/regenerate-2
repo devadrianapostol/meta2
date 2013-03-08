@@ -26,7 +26,7 @@ for v in $(bootstrap/meta2 -g); do
     make -f Makefile bootstrap
     touch meta2.meta2
     make -f Makefile all check
-    bash scripts/generate-version
+    bash scripts.tmp/generate-version
     make -f Makefile bootstrap
 done
 
