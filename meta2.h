@@ -36,7 +36,7 @@ jmp_buf finished;
 /* Exported API */
 void input(char *start, char *end);
 void run();			/* provided by generated parser */
-void start();
+int start();
 void read_input();
 void initialize(int argc, char *argv[]);
 
