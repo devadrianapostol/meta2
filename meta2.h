@@ -39,7 +39,7 @@ void run();			/* provided by generated parser */
 void start();
 void read_input();
 void initialize(int argc, char *argv[]);
-s
+
 
 static char *
 copy(char *str, int n)
