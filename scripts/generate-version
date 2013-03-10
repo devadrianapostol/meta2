@@ -6,11 +6,11 @@
 generator=bootstrap/meta2
 target=bootstrap/meta2.c
 
-if test -nz "$1"; then
+if test -n "$1"; then
     generator="$1"
 fi
 
-if test -nz "$2"; then
+if test -n "$2"; then
     target="$2"
 fi
 
