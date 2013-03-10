@@ -3,7 +3,7 @@
 #
 # generate self-contained and versioned bootstrap sources
 
-generater=bootstrap/meta2
+generator=bootstrap/meta2
 target=bootstrap/meta2.c
 
 if test -nz "$1"; then
