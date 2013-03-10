@@ -4,7 +4,7 @@ CFLAGS = -I. -g
 META2 = bootstrap/meta2
 
 
-.PHONY: all clean dist bootstrap snapshot check install
+.PHONY: all clean dist bootstrap snapshot check install rebuild
 
 
 all: meta2
@@ -20,6 +20,10 @@ meta2.c: meta2.meta2
 
 snapshot: all
 	bash scripts/snapshot
+
+rebuild:
+	touch meta2.meta2
+	$(MAKE) all
 
 dist:
 	archive=meta2-$$(date +%Y%m%d); \

@@ -4,7 +4,7 @@
 #
 # This script should not be called directly - see scripts/regenerate
 
-set -ex
+set -e
 
 if test -z "$1"; then
     echo "usage: scripts.tmp/regenerate-2 COMMIT"
@@ -23,9 +23,7 @@ make -f Makefile bootstrap
 for v in $(bootstrap/meta2 -g); do
     echo $v
     git reset --hard $v
-    make -f Makefile bootstrap
-    touch meta2.meta2
-    make -f Makefile all check
+    make -f Makefile bootstrap rebuild check
     bash scripts.tmp/generate-version
     make -f Makefile bootstrap
 done

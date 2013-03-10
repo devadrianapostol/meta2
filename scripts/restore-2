@@ -15,7 +15,7 @@ fi
 current=$(git rev-parse HEAD)
 
 git reset --hard "$1"
-make -f Makefile bootstrap
+make -f Makefile bootstrap rebuild
 
 # restore HEAD
 git reset --hard $current
