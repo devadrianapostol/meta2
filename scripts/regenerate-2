@@ -15,6 +15,8 @@ fi
 current=$(git rev-parse HEAD)
 target="$1"
 
+echo "initial HEAD is: " $current
+
 # build targeted version
 git reset --hard "$1"
 make -f Makefile bootstrap
@@ -23,7 +25,9 @@ make -f Makefile bootstrap
 for v in $(bootstrap/meta2 -g); do
     echo $v
     git reset --hard $v
-    make -f Makefile bootstrap rebuild check
+    make -f Makefile bootstrap
+    touch meta2.meta2
+    make -f Makefile all check
     bash scripts.tmp/generate-version
     make -f Makefile bootstrap
 done

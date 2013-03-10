@@ -14,8 +14,12 @@ fi
 # get HEAD commit
 current=$(git rev-parse HEAD)
 
+echo "initial HEAD is: " $current
+
 git reset --hard "$1"
-make -f Makefile bootstrap rebuild
+make -f Makefile bootstrap
+touch meta2.meta2
+make -f Makefile all
 
 # restore HEAD
 git reset --hard $current
