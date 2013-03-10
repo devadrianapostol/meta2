@@ -30,6 +30,9 @@ for v in $(bootstrap/meta2 -g); do
     make -f Makefile all check
     bash scripts.tmp/generate-version
     make -f Makefile bootstrap
+    echo "version: " $(./meta2 -v)
+    echo "history:"
+    ./meta2 -g
 done
 
 # restore HEAD
