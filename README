@@ -155,31 +155,6 @@ directory. The working directory must not contain any uncommitted
 changes.  Also, "make check" is run before actually taking the
 snapshot.
 
-You can re-create a particular state of the parser-generator by
-invoking the "restore" script in the "scripts" subdirectory:
-
-  scripts/restore FINGERPRINT
-
-will check out the source tree with the same commit ID as given in
-"FINGERPRINT" and build "meta2" from the bootstrap sources found in
-this state of the working directory.
-
-It is also possible to completely re-generate all "meta2" programs
-used to obtain a particular version of the parser-generator:
-
-  scripts/regenerate [FINGERPRINT]
-
-will checkout and build the version found in the sources of the commit
-with the ID "FINGERPRINT" (or the current version found in the
-"bootstrap" directory if no fingerprint is given) and then walk
-through the complete "genealogy" of that "meta2" executable and
-checkout and build each ancestor until the target version is
-reached. On completion, the working directory is restored with HEAD
-being identical to the commit that was active at the point
-"regenerate" was invoked. If an error occurs during regeneration
-(which should normally not happen) HEAD is _not_ reset to the initial
-state.
-
 
 * Extensions
 

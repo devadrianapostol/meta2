@@ -15,7 +15,7 @@ fi
 current=$(git rev-parse HEAD)
 target="$1"
 
-echo "initial HEAD is: " $current
+echo "initial HEAD is: "$current
 
 # build targeted version
 git reset --hard "$1"

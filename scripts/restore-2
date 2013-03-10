@@ -14,7 +14,7 @@ fi
 # get HEAD commit
 current=$(git rev-parse HEAD)
 
-echo "initial HEAD is: " $current
+echo "initial HEAD is: "$current
 
 git reset --hard "$1"
 make -f Makefile bootstrap
