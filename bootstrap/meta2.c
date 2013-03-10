@@ -1,7 +1,8 @@
-#define FINGERPRINT "0eddeef982abef7823e06b7a26a19d85f6a93e8d"
+#define FINGERPRINT "ca913278a53db0d2f40963366bdbd4781038938a"
 #define GENEALOGY \
 "d6557ec1dd62aedebdb6d2d93a62b37c23ccffeb\n" \
-"1cd315abd4e675d3c73f68df72e6d66630221690\n"
+"1cd315abd4e675d3c73f68df72e6d66630221690\n" \
+"0eddeef982abef7823e06b7a26a19d85f6a93e8d\n"
 /* meta2.h */
 
 
@@ -31,13 +32,18 @@ char *previous;
 int label;
 int column;
 int line_number;
-int newline, force, trace, ci, dquotes, noindent;
+int newline, force, trace, ci, dquotes, noindent, keepws;
 int level;
 char *prgname;
 jmp_buf finished;
 
 
-void run();
+/* Exported API */
+void input(char *start, char *end);
+void run();			/* provided by generated parser */
+int start();
+void read_input();
+void initialize(int argc, char *argv[]);
 
 
 static char *
@@ -108,6 +114,8 @@ next()
 static void
 skipws()
 {
+  if(keepws) return;
+
   while(position < limit) {
     char c = next();
 
@@ -120,7 +128,15 @@ skipws()
 }
 
 
-static void
+void
+input(char *start, char *end)
+{
+  buffer = start;
+  limit = end;
+}
+
+
+void
 read_input()
 {
   size_t n, len;
@@ -357,6 +373,9 @@ OUT()
 }
 
 
+#define ADR(lbl)       goto lbl
+
+
 /* extension: set left margin to 0 (like .LABEL), used for "< ... >" in Meta-IIb */
 static void
 LM0()
@@ -365,13 +384,26 @@ LM0()
 }
 
 
-#define ADR(lbl)       goto lbl
+/* extension: match string of specific length */
+static void 
+LEN(int n)
+{
+  char *pos;
+
+  if(position + n > limit) flag = 0;
+  else {
+    flag = 1;
+    free(previous);
+    previous = copy(position, n);
+    position += n;
+  }
+}
 
 
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i]"
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-b]"
 #ifdef FINGERPRINT
 	  " [-v]"
 #endif
@@ -388,7 +420,7 @@ initialize(int argc, char *argv[])
 {
   int i;
 
-  force = trace = ci = dquotes = noindent = 0;
+  force = trace = ci = dquotes = noindent = keepws = 0;
   prgname = argv[ 0 ];
 
   for(i = 1; i < argc; ++i) {
@@ -403,6 +435,7 @@ initialize(int argc, char *argv[])
 	case 'i': noindent = 1; break;
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
+	case 'b': keepws = 1; break;
 	case 'v': 
 #ifdef FINGERPRINT
 	  printf("%s\n", FINGERPRINT); 
@@ -431,23 +464,26 @@ initialize(int argc, char *argv[])
   buffer = limit = NULL;
   previous = NULL;
   stack_index = -1;
-  read_input();
   flag = newline = 0;
   label = 0;
   column = 8;
 }
 
 
-void
+int
 start()
 {
   if(setjmp(finished)) {
     skipws();
 
-    if(position < limit)
+    if(position < limit) {
       fail("unexpected input");
+      return 0;
+    }
   }
   else run();
+
+  return 1;
 }
 
 
@@ -456,6 +492,7 @@ int
 main(int argc, char *argv[])
 {
   initialize(argc, argv);
+  read_input();
   start();  
   return 0;
 }
@@ -463,319 +500,286 @@ main(int argc, char *argv[])
 
 
 #endif
-
-        #include <meta2.h>
-        void run() {
-        ADR(PROGRAM);
-OUT1
-        :;
-        TST("*1");
-        BF(L0);
-        CL("GN1();");
-        OUT();
-L0
-        :;
-        BT(L1);
-        TST("*2");
-        BF(L2);
-        CL("GN2();");
-        OUT();
-L2
-        :;
-        BT(L1);
-        TST("*");
-        BF(L3);
-        CL("CI();");
-        OUT();
-L3
-        :;
-        BT(L1);
-        SR();
-        BF(L4);
-        CL("CL(");
-        CI();
-        CL(");");
-        OUT();
-L4
-        :;
-L1
-        :;
-        R();
-OUTPUT
-        :;
-        TST(".OUT");
-        BF(L5);
-        TST("(");
-        BE();
-L6
-        :;
-        CLL(OUT1,___L7);
-        BT(L6);
-        SET();
-        BE();
-        TST(")");
-        BE();
-L5
-        :;
-        BT(L8);
-        TST("<");
-        BF(L9);
-        CL("LM0();");
-        OUT();
-L10
-        :;
-        CLL(OUT1,___L11);
-        BT(L10);
-        SET();
-        BE();
-        TST(">");
-        BE();
-L9
-        :;
-        BT(L8);
-        TST(".LABEL");
-        BF(L12);
-        CL("LB();");
-        OUT();
-        CLL(OUT1,___L13);
-        BE();
-L12
-        :;
-L8
-        :;
-        BF(L14);
-        CL("OUT();");
-        OUT();
-L14
-        :;
-L15
-        :;
-        R();
-EX3
-        :;
-        ID();
-        BF(L16);
-        CL("CLL(");
-        CI();
-        CL(",___");
-        GN1();
-        CL(");");
-        OUT();
-L16
-        :;
-        BT(L17);
-        SR();
-        BF(L18);
-        CL("TST(");
-        CI();
-        CL(");");
-        OUT();
-L18
-        :;
-        BT(L17);
-        TST(".ID");
-        BF(L19);
-        CL("ID();");
-        OUT();
-L19
-        :;
-        BT(L17);
-        TST(".NUMBER");
-        BF(L20);
-        CL("NUM();");
-        OUT();
-L20
-        :;
-        BT(L17);
-        TST(".STRING");
-        BF(L21);
-        CL("SR();");
-        OUT();
-L21
-        :;
-        BT(L17);
-        TST("(");
-        BF(L22);
-        CLL(EX1,___L23);
-        BE();
-        TST(")");
-        BE();
-L22
-        :;
-        BT(L17);
-        TST(".EMPTY");
-        BF(L24);
-        CL("SET");
-        OUT();
-L24
-        :;
-        BT(L17);
-        TST("$");
-        BF(L25);
-        LB();
-        GN1();
-        OUT();
-        CL(":;");
-        OUT();
-        CLL(EX3,___L26);
-        BE();
-        CL("BT(");
-        GN1();
-        CL(");");
-        OUT();
-        CL("SET();");
-        OUT();
-L25
-        :;
-L17
-        :;
-        R();
-EX2
-        :;
-        CLL(EX3,___L27);
-        BF(L28);
-        CL("BF(");
-        GN1();
-        CL(");");
-        OUT();
-L28
-        :;
-        BT(L29);
-        CLL(OUTPUT,___L30);
-        BF(L31);
-L31
-        :;
-L29
-        :;
-        BF(L32);
-L33
-        :;
-        CLL(EX3,___L34);
-        BF(L35);
-        CL("BE();");
-        OUT();
-L35
-        :;
-        BT(L36);
-        CLL(OUTPUT,___L37);
-        BF(L38);
-L38
-        :;
-L36
-        :;
-        BT(L33);
-        SET();
-        BE();
-        LB();
-        GN1();
-        OUT();
-        CL(":;");
-        OUT();
-L32
-        :;
-L39
-        :;
-        R();
-EX1
-        :;
-        CLL(EX2,___L40);
-        BF(L41);
-L42
-        :;
-        TST("/");
-        BF(L43);
-L43
-        :;
-        BT(L44);
-        TST("|");
-        BF(L45);
-L45
-        :;
-L44
-        :;
-        BF(L46);
-        CL("BT(");
-        GN1();
-        CL(");");
-        OUT();
-        CLL(EX2,___L47);
-        BE();
-L46
-        :;
-L48
-        :;
-        BT(L42);
-        SET();
-        BE();
-        LB();
-        GN1();
-        OUT();
-        CL(":;");
-        OUT();
-L41
-        :;
-L49
-        :;
-        R();
-ST
-        :;
-        ID();
-        BF(L50);
-        LB();
-        CI();
-        OUT();
-        CL(":;");
-        OUT();
-        TST("=");
-        BE();
-        CLL(EX1,___L51);
-        BE();
-        TST(".,");
-        BF(L52);
-L52
-        :;
-        BT(L53);
-        TST(";");
-        BF(L54);
-L54
-        :;
-L53
-        :;
-        BE();
-        CL("R();");
-        OUT();
-L50
-        :;
-L55
-        :;
-        R();
-PROGRAM
-        :;
-        TST(".SYNTAX");
-        BF(L56);
-        ID();
-        BE();
-        CL("#include <meta2.h>");
-        OUT();
-        CL("void run() {");
-        OUT();
-        CL("ADR(");
-        CI();
-        CL(");");
-        OUT();
-L57
-        :;
-        CLL(ST,___L58);
-        BT(L57);
-        SET();
-        BE();
-        TST(".END");
-        BE();
-        CL("}");
-        OUT();
-L56
-        :;
-L59
-        :;
-        R();
-        }
+#include <meta2.h>
+void run() {
+ADR(PROGRAM);
+OUT1:;
+TST("*1");
+BF(L0);
+LM0();
+CL("GN1();");
+OUT();
+L0:;
+BT(L1);
+TST("*2");
+BF(L2);
+LM0();
+CL("GN2();");
+OUT();
+L2:;
+BT(L1);
+TST("*");
+BF(L3);
+LM0();
+CL("CI();");
+OUT();
+L3:;
+BT(L1);
+SR();
+BF(L4);
+LM0();
+CL("CL(");
+CI();
+CL(");");
+OUT();
+L4:;
+L1:;
+R();
+OUTPUT:;
+TST(".OUT");
+BF(L5);
+TST("(");
+BE();
+L6:;
+CLL(OUT1,___L7);
+BT(L6);SET();
+BE();
+TST(")");
+BE();
+L5:;
+BT(L8);
+TST("<");
+BF(L9);
+LM0();
+CL("LM0();");
+OUT();
+L10:;
+CLL(OUT1,___L11);
+BT(L10);SET();
+BE();
+TST(">");
+BE();
+L9:;
+BT(L8);
+TST(".LABEL");
+BF(L12);
+LM0();
+CL("LB();");
+OUT();
+CLL(OUT1,___L13);
+BE();
+L12:;
+L8:;
+BF(L14);
+LM0();
+CL("OUT();");
+OUT();
+L14:;
+L15:;
+R();
+EX3:;
+ID();
+BF(L16);
+LM0();
+CL("CLL(");
+CI();
+CL(",___");
+GN1();
+CL(");");
+OUT();
+L16:;
+BT(L17);
+SR();
+BF(L18);
+LM0();
+CL("TST(");
+CI();
+CL(");");
+OUT();
+L18:;
+BT(L17);
+TST(".ID");
+BF(L19);
+LM0();
+CL("ID();");
+OUT();
+L19:;
+BT(L17);
+TST(".NUMBER");
+BF(L20);
+LM0();
+CL("NUM();");
+OUT();
+L20:;
+BT(L17);
+TST(".STRING");
+BF(L21);
+LM0();
+CL("SR();");
+OUT();
+L21:;
+BT(L17);
+TST("(");
+BF(L22);
+CLL(EX1,___L23);
+BE();
+TST(")");
+BE();
+L22:;
+BT(L17);
+TST(".EMPTY");
+BF(L24);
+LM0();
+CL("SET");
+OUT();
+L24:;
+BT(L17);
+TST(".LENGTH");
+BF(L25);
+NUM();
+BE();
+LM0();
+CL("LEN(");
+CI();
+CL(");");
+OUT();
+L25:;
+BT(L17);
+TST("$");
+BF(L26);
+LM0();
+GN1();
+CL(":;");
+OUT();
+CLL(EX3,___L27);
+BE();
+LM0();
+CL("BT(");
+GN1();
+CL(");SET();");
+OUT();
+L26:;
+L17:;
+R();
+EX2:;
+CLL(EX3,___L28);
+BF(L29);
+LM0();
+CL("BF(");
+GN1();
+CL(");");
+OUT();
+L29:;
+BT(L30);
+CLL(OUTPUT,___L31);
+BF(L32);
+L32:;
+L30:;
+BF(L33);
+L34:;
+CLL(EX3,___L35);
+BF(L36);
+LM0();
+CL("BE();");
+OUT();
+L36:;
+BT(L37);
+CLL(OUTPUT,___L38);
+BF(L39);
+L39:;
+L37:;
+BT(L34);SET();
+BE();
+LM0();
+GN1();
+CL(":;");
+OUT();
+L33:;
+L40:;
+R();
+EX1:;
+CLL(EX2,___L41);
+BF(L42);
+L43:;
+TST("/");
+BF(L44);
+L44:;
+BT(L45);
+TST("|");
+BF(L46);
+L46:;
+L45:;
+BF(L47);
+LM0();
+CL("BT(");
+GN1();
+CL(");");
+OUT();
+CLL(EX2,___L48);
+BE();
+L47:;
+L49:;
+BT(L43);SET();
+BE();
+LM0();
+GN1();
+CL(":;");
+OUT();
+L42:;
+L50:;
+R();
+ST:;
+ID();
+BF(L51);
+LM0();
+CI();
+CL(":;");
+OUT();
+TST("=");
+BE();
+CLL(EX1,___L52);
+BE();
+TST(".,");
+BF(L53);
+L53:;
+BT(L54);
+TST(";");
+BF(L55);
+L55:;
+L54:;
+BE();
+LM0();
+CL("R();");
+OUT();
+L51:;
+L56:;
+R();
+PROGRAM:;
+TST(".SYNTAX");
+BF(L57);
+ID();
+BE();
+LM0();
+CL("#include <meta2.h>");
+OUT();
+LM0();
+CL("void run() {");
+OUT();
+LM0();
+CL("ADR(");
+CI();
+CL(");");
+OUT();
+L58:;
+CLL(ST,___L59);
+BT(L58);SET();
+BE();
+TST(".END");
+BE();
+LM0();
+CL("}");
+OUT();
+L57:;
+L60:;
+R();
+}
