@@ -43,8 +43,11 @@ bootstrap:
 check: all
 	$(META2) -q <meta2.meta2 >meta2.c
 	$(MAKE) meta2
+	./meta2 -q <meta2.meta2 >meta2.1.c
+	touch meta2.meta2
+	$(MAKE) meta2 META2=./meta2
 	./meta2 -q <meta2.meta2 >meta2.2.c
-	diff -bu meta2.c meta2.2.c
+	diff -bu meta2.1.c meta2.2.c
 	./meta2 -cq <simple.meta2 >simple.c
 	$(CC) $(CFLAGS) simple.c
 	echo "3+4*(5+6.2e-5)" | ./a.out | cmp - simple.out
