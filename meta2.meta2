@@ -9,7 +9,7 @@ OUTPUT = ('.OUT' '(' $OUT1 ')'
        | '<' <'LM0();'> $OUT1 '>'
        | '.LABEL' <'LB();'> OUT1) <'OUT();'> ;
 
-EX3 = .ID <'CLL(' * ',___' *1 ');'>
+EX3 = .ID <'CLL(___' * ',' *1 ');'>
     | .STRING <'TST(' * ');'>
     | '.ID' <'ID();'>
     | '.NUMBER' <'NUM();'>
@@ -24,11 +24,11 @@ EX2 = (EX3 <'BF(' *1 ');'> | OUTPUT)
 
 EX1 = EX2 $(('/' | '|') <'BT(' *1 ');'> EX2) <*1 ':;'> ;
 
-ST = .ID <* ':;'> '=' EX1 ('.,' | ';') <'R();'> ;
+ST = .ID <'___' * ':;'> '=' EX1 ('.,' | ';') <'R();'> ;
 
 PROGRAM = '.SYNTAX' .ID 
 	  <'#include <meta2.h>'>
 	  <'void run() {'>
-	  <'ADR(' * ');'> $ ST '.END' <'}'> ;
+	  <'ADR(___' * ');'> $ ST '.END' <'}'> ;
 
 .END

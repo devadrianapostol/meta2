@@ -341,7 +341,7 @@ GN_0(int off)
   if(!g) {
     static char buf[ 32 ];
 
-    sprintf(buf, "L%d", label++);
+    sprintf(buf, "___L%d", label++);
     vstack[ stack_index * 2 + off ] = g = strdup(buf);
   }
 
