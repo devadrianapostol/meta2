@@ -53,7 +53,7 @@ check: all
 	echo "3+4*(5+6.2e-5)" | ./a.out | cmp - simple.out
 
 install: all
-	mkdir -p $(PREFIX)/{bin,include}
+	mkdir -p $(PREFIX)/bin $(PREFIX)/include
 	install -m755 $(META2) $(PREFIX)/bin
 	install -m755 meta2c $(PREFIX)/bin
 	install -m644 meta2.h $(PREFIX)/include
