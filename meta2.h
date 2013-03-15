@@ -304,7 +304,7 @@ R_0()
 
 #define R                      goto *R_0
 
-static inline NOP() {}
+static inline void NOP() {}
 
 #define SET                    flag = 1; NOP
 #define B(lbl)                 goto lbl
@@ -317,7 +317,7 @@ static void
 CL(char *str)
 {
   emit(str);
-  //XXX  emit(" ");
+  /*XXX  emit(" "); */
 }
 
 
@@ -383,8 +383,6 @@ LM0()
 static void 
 LEN(int n)
 {
-  char *pos;
-
   if(position + n > limit) flag = 0;
   else {
     flag = 1;
