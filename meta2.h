@@ -22,7 +22,7 @@ int flag;
 void *rstack[ STACK_SIZE ];
 char *vstack[ STACK_SIZE * 2 ];
 int stack_index = -1;
-int buffer_size = 0;
+size_t buffer_size = 0;
 char *previous;
 int label;
 int column;
