@@ -37,9 +37,7 @@
 
 (add-hook 'meta2-mode-hook
           (lambda ()
-	    (setq font-lock-defaults (list 'generic-font-lock-defaults nil t))
-            (set (make-local-variable 'compile-command)
-                 (concat "meta2 <" buffer-file-name))))
+	    (setq font-lock-defaults (list 'generic-font-lock-defaults nil t))))
 
 (add-to-list 'auto-mode-alist '("\\.meta2$" . meta2-mode))
 
