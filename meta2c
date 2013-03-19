@@ -40,12 +40,12 @@ case "$outfile" in
     *.c)
 	meta2 $options <"$infile" >"$outfile";;
     *.o) 
-	tempc=$(mktemp XXXXXXXX.c)
+	tempc=$(mktemp tmpXXXXXXXX.c)
 	meta2 $options <"$infile" >$tempc
 	gcc -c -I. -O2 $tempc -o "$outfile"
 	rm -f $tempc;;
     *) 
-	tempc=$(mktemp XXXXXXXX.c)
+	tempc=$(mktemp tmpXXXXXXXX.c)
 	meta2 $options <"$infile" >$tempc
 	gcc -I. -O2 $tempc -o "$outfile"
 	rm -f $tempc;;
