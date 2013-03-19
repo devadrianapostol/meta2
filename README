@@ -181,6 +181,9 @@ snapshot.
    (whitespace is not skipped). This can only fail if the remaining
    input has less than <n> characters.
 
+7. If a literal match ('...') begins with whitespace, then whitespace
+   will not be skipped before attempting the match.
+
 
 * Implementation notes
 
