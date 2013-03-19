@@ -1,10 +1,11 @@
-#define FINGERPRINT "462488da94237646c2a0234af80e6c801dc5abf5"
+#define FINGERPRINT "8763d5137308cf67c3199b96fc5968789fa66dcf"
 #define GENEALOGY \
 "d6557ec1dd62aedebdb6d2d93a62b37c23ccffeb\n" \
 "1cd315abd4e675d3c73f68df72e6d66630221690\n" \
 "0eddeef982abef7823e06b7a26a19d85f6a93e8d\n" \
 "ca913278a53db0d2f40963366bdbd4781038938a\n" \
-"d272c478626efd03b0b002899f89c89b7445c1e8\n"
+"d272c478626efd03b0b002899f89c89b7445c1e8\n" \
+"462488da94237646c2a0234af80e6c801dc5abf5\n"
 /* meta2.h */
 
 
@@ -29,7 +30,7 @@ int flag;
 void *rstack[ STACK_SIZE ];
 char *vstack[ STACK_SIZE * 2 ];
 int stack_index = -1;
-int buffer_size = 0;
+size_t buffer_size = 0;
 char *previous;
 int label;
 int column;
@@ -165,7 +166,8 @@ static void
 TST(char *str)
 {
   size_t n = strlen(str);
-  skipws();
+
+  if(!isspace(*str)) skipws();
   
   if(ci ? !strncasecmp(str, position, n) : !strncmp(str, position, n)) {
     free(previous);
@@ -216,7 +218,10 @@ SR()
 
     for(n = 0; *pos != delim; ++n) {
       if(pos >= limit) return;	/* XXX return? */
-      else if(*pos == '\\') pos += 2;
+      else if(*pos == '\\') {
+	pos += 2;
+	++n;
+      }
       else ++pos;
     } 
 
@@ -311,7 +316,7 @@ R_0()
 
 #define R                      goto *R_0
 
-static inline NOP() {}
+static inline void NOP() {}
 
 #define SET                    flag = 1; NOP
 #define B(lbl)                 goto lbl
@@ -324,7 +329,7 @@ static void
 CL(char *str)
 {
   emit(str);
-  //XXX  emit(" ");
+  /*XXX  emit(" "); */
 }
 
 
@@ -371,7 +376,8 @@ static void
 OUT()
 {
   column = 8;
-  putchar('\n');
+
+  if(!keepws) putchar('\n');
 }
 
 
@@ -390,8 +396,6 @@ LM0()
 static void 
 LEN(int n)
 {
-  char *pos;
-
   if(position + n > limit) flag = 0;
   else {
     flag = 1;
