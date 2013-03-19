@@ -158,7 +158,8 @@ static void
 TST(char *str)
 {
   size_t n = strlen(str);
-  skipws();
+
+  if(!isspace(*str)) skipws();
   
   if(ci ? !strncasecmp(str, position, n) : !strncmp(str, position, n)) {
     free(previous);
@@ -209,7 +210,10 @@ SR()
 
     for(n = 0; *pos != delim; ++n) {
       if(pos >= limit) return;	/* XXX return? */
-      else if(*pos == '\\') pos += 2;
+      else if(*pos == '\\') {
+	pos += 2;
+	++n;
+      }
       else ++pos;
     } 
 
@@ -364,7 +368,8 @@ static void
 OUT()
 {
   column = 8;
-  putchar('\n');
+
+  if(!keepws) putchar('\n');
 }
 
 
