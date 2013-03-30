@@ -5,9 +5,13 @@
 #define META2_H
 
 
+#define _BSD_SOURCE
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <ctype.h>
 #include <assert.h>
 #include <setjmp.h>
