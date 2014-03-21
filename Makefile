@@ -4,7 +4,7 @@ CFLAGS = -I. -g
 META2 = bootstrap/meta2
 
 
-.PHONY: all clean dist bootstrap snapshot check install rebuild
+.PHONY: all clean dist bootstrap check install rebuild
 
 
 all: meta2
@@ -17,9 +17,6 @@ meta2: meta2.c meta2.h
 
 meta2.c: meta2.meta2
 	$(META2) -q <$< >$@
-
-snapshot: all
-	bash scripts/snapshot
 
 rebuild:
 	touch meta2.meta2

@@ -114,46 +114,16 @@ respectively, and understands the following command-line options:
      differences in case are allowed. The default mode is to match
      case-sensitively.
 
-  -v
+  -c
 
-     Writes the "fingerprint" of this executable to standard output.
-     This is the same as the git(1) commit ID of the sources used To
-     create this version of the "meta2". This option is only available
-     in parsers created via a "snapshot" (see below).
-
-  -g
-
-     Writes the "genealogy" of this executable to standard output.
-     This is a list of the fingerprints of all versions that where
-     used to create this version of the "meta2". This options is also
-     only available in "snapshot" binaries.
+     When matching quoted strings, perform the match in case-insensitive
+     mode. The default is to be case-sensitive.
 
 The C code generated from the syntax description can be compiled like
 any other C program, as long as the "meta2.h" include file is in the
 include path. If you don't want to install the files in your system,
 pass "-I." to the C compiler when compiling a translated
 syntax-description.
-
-
-* Reproducibility
-
-In this implementation of Meta-II an attempt is made to generate fully
-self-contained and reproducible executables and in particular allow
-complete regeneration of a version of the parser-generator from all
-its complete list of ancestors. Once a variant of the "meta2" program
-is expected to be working correctly, a "snapshot" can be taken by
-entering
-
-  make snapshot
-
-This will combine the C file generated from "meta2.meta2", the current
-"meta2.h" header file, the version of the "meta2" executable and all
-its ancestors used to generate this C file and the current HEAD commit
-ID of git(1) repository in which the build takes place and create a
-bootstrap version of the source and binary in the "bootstrap"
-directory. The working directory must not contain any uncommitted
-changes.  Also, "make check" is run before actually taking the
-snapshot.
 
 
 * Extensions

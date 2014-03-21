@@ -405,14 +405,7 @@ LEN(int n)
 static void
 usage(int code)
 {
-  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-b]"
-#ifdef FINGERPRINT
-	  " [-v]"
-#endif
-#ifdef GENEALOGY
-	  " [-g]"
-#endif
-	  "\n", prgname);
+  fprintf(stderr, "usage: %s [-h] [-f] [-t] [-q] [-i] [-b]\n", prgname);
   exit(code);
 }
 
@@ -438,22 +431,6 @@ initialize(int argc, char *argv[])
 	case 'h': usage(EXIT_SUCCESS);
 	case 'q': dquotes = 1; break;
 	case 'b': keepws = 1; break;
-	case 'v': 
-#ifdef FINGERPRINT
-	  printf("%s\n", FINGERPRINT); 
-	  exit(EXIT_SUCCESS);
-#else
-	  fprintf(stderr, "Error: no version available\n");
-	  exit(EXIT_FAILURE);
-#endif
-	case 'g':
-#ifdef GENEALOGY
-	  printf("%s", GENEALOGY);
-	  exit(EXIT_SUCCESS);
-#else
-	  fprintf(stderr, "Error: no genealogy available\n");
-	  exit(EXIT_FAILURE);
-#endif
 	default:
 	  usage(EXIT_FAILURE);
 	}
