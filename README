@@ -106,7 +106,8 @@ respectively, and understands the following command-line options:
   -b
 
      Do not skip whitespace when looking for the next match. The default
-     is to skip any whitespace before matching.
+     is to skip any whitespace before matching. Also, do not emit a newline
+     character after an output operation.
 
   -i
 
