@@ -1,11 +1,11 @@
 .syntax simple
 
-val = .number <'PUSH ' *>
+val = .number <'PUSH ' * ' ; ' *#>
     | '(' ex1 ')';
-mulop = '*' val <'MUL'>
-      | '/' val <'DIV'>;
-addop = '+' ex2 <'ADD'>
-      | '-' ex2 <'SUB'>;
+mulop = '*' val <'MUL' ' ; ' *#>
+      | '/' val <'DIV' ' ; ' *#>;
+addop = '+' ex2 <'ADD' ' ; ' *#>
+      | '-' ex2 <'SUB' ' ; ' *#>;
 ex2 = val $mulop;
 ex1 = ex2 $addop;
 
