@@ -339,6 +339,16 @@ CI()
 
 
 static void
+CPOS() 
+{
+  static char buffer[ 32 ];
+
+  sprintf(buffer, "%d", line_number);
+  emit(buffer);
+}
+
+
+static void
 GN_0(int off)
 {
   char *g;

@@ -154,6 +154,9 @@ syntax-description.
 7. If a literal match ('...') begins with whitespace, then whitespace
    will not be skipped before attempting the match.
 
+8. The output elements may be of the form "*#", which refers to the current
+   line number.
+
 
 * Implementation notes
 
